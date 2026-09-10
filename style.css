@@ -1,0 +1,905 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    /* Fonte moderna e limpa para o corpo do site */
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #1e293b;
+    line-height: 1.6;
+
+    background-image:
+        linear-gradient(
+            rgba(245, 247, 250, 0.88),
+            rgba(0, 0, 0, 0.88)
+        ),
+        url("../Imagem/fundoo.png");
+
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+
+/* =========================
+   HEADER & NAVEGAÇÃO
+========================= */
+
+header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    color: white;
+    padding: 25px 7% 65px;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.topo {
+    max-width: 1300px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo {
+    /* Fonte manuscrita estilo Diário de um Banana para a Logo */
+    font-family: 'Patrick Hand', cursive;
+    font-size: 32px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo span {
+    color: #facc15;
+}
+
+nav {
+    display: flex;
+    gap: 12px;
+}
+
+nav a {
+    font-family: 'Inter', sans-serif;
+    color: white;
+    text-decoration: none;
+    padding: 9px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+nav a:hover {
+    background: #facc15;
+    color: #0f172a;
+    border-color: #facc15;
+    transform: translateY(-2px);
+}
+
+/* Destaque para o botão de compra no menu */
+nav a.btn-comprar {
+    background-color: #facc15;
+    color: #0f172a;
+    border-color: #facc15;
+}
+
+nav a.btn-comprar:hover {
+    background-color: #eab308;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    max-width: 850px;
+    margin: 55px auto 0;
+    text-align: center;
+}
+
+.hero h1 {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 56px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    color: #ffffff;
+    letter-spacing: 1px;
+}
+
+.hero p {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: #cbd5e1;
+    font-weight: 400;
+    margin-bottom: 30px;
+}
+
+
+/* =========================
+   PESQUISA
+========================= */
+
+.pesquisa {
+    max-width: 650px;
+    margin: auto;
+    display: flex;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.pesquisa input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 16px 20px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    color: #222;
+}
+
+.pesquisa button {
+    border: none;
+    background: #facc15;
+    color: #222;
+    padding: 0 22px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.pesquisa button:hover {
+    background: #eab308;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+main {
+    width: 76%;
+    max-width: 1300px;
+    margin: 45px auto;
+}
+
+
+/* =========================
+   TÍTULO
+========================= */
+
+.titulo-secao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.titulo-secao h2 {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 38px;
+    color: #0f172a;
+    letter-spacing: 0.5px;
+}
+
+.titulo-secao p {
+    color: #64748b;
+    font-size: 15px;
+}
+
+.quantidade {
+    background: #ede9fe;
+    color: #5b21b6;
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   NENHUM RESULTADO
+========================= */
+
+.nenhum-resultado {
+    display: none;
+    background: white;
+    padding: 45px 20px;
+    margin-bottom: 30px;
+    text-align: center;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+}
+
+.nenhum-resultado div {
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+.nenhum-resultado h3 {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.nenhum-resultado p {
+    color: #777;
+}
+
+
+/* =========================
+   GRID & CARD DOS LIVROS
+========================= */
+
+.livros {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 45px;
+}
+
+.livro {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.livro:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.capa {
+    width: 100%;
+    height: 350px;
+    background: #e5e7eb;
+    overflow: hidden;
+}
+
+.capa img {
+    width: 103%;
+    height: 103%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s;
+}
+
+.livro:hover .capa img {
+    transform: scale(1.05);
+}
+
+.informacoes {
+    padding: 18px;
+}
+
+.numero {
+    display: inline-block;
+    background: #ede9fe;
+    color: #5b21b6;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.informacoes h3 {
+    font-family: 'Caveat', cursive;
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 3px;
+    line-height: 1.2;
+}
+
+.autor {
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.estrelas {
+    color: #f59e0b;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+
+/* =========================
+   PÁGINA DE COMPRAS (COMPRAR.HTML)
+========================= */
+
+.grid-compras {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 30px;
+}
+
+.card-compra {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+}
+
+.card-compra:hover {
+    transform: translateY(-7px);
+}
+
+.card-compra img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.card-compra h3 {
+    font-family: 'Caveat', cursive;
+    font-size: 26px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.card-compra .autor {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.preco-destaque {
+    font-size: 24px;
+    font-weight: 800;
+    color: #16a34a;
+    margin: 12px 0;
+}
+
+.btn-amazon {
+    display: block;
+    background-color: #ff9900;
+    color: #111111;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-amazon:hover {
+    background-color: #e68a00;
+}
+
+
+/* =========================
+   BOTÕES DOS CARDS
+========================= */
+
+.botoes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.botao {
+    display: block;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    background: #4f46e5;
+    color: white;
+    padding: 11px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.botao:hover {
+    background: #3730a3;
+}
+
+.quiz-botao {
+    background: #2563eb;
+}
+
+.quiz-botao:hover {
+    background: #1d4ed8;
+}
+
+
+/* =========================
+   SOBRE
+========================= */
+
+.sobre {
+    margin-top: 60px;
+    padding: 40px;
+    background: white;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+}
+
+.sobre h2 {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: #0f172a;
+}
+
+.sobre p {
+    max-width: 700px;
+    margin: auto;
+    color: #475569;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    background: #0f172a;
+    color: white;
+    text-align: center;
+    padding: 35px;
+    margin-top: 60px;
+}
+
+footer h3 {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 26px;
+    margin-bottom: 5px;
+}
+
+footer p {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+
+/* =========================
+   MODAL DO QUIZ
+========================= */
+
+.quiz-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 9999;
+}
+
+.quiz-overlay.ativo {
+    display: flex;
+}
+
+.quiz-modal {
+    position: relative;
+    width: 100%;
+    max-width: 650px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: aparecer 0.25s ease;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.fechar-quiz {
+    position: absolute;
+    right: 20px;
+    top: 18px;
+    border: none;
+    background: #f3f4f6;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.fechar-quiz:hover {
+    background: #e5e7eb;
+}
+
+.quiz-livro {
+    display: inline-block;
+    background: #ede9fe;
+    color: #5b21b6;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.quiz-modal h2 {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 34px;
+    margin-bottom: 20px;
+}
+
+.progresso {
+    width: 100%;
+    height: 9px;
+    background: #e5e7eb;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progresso-barra {
+    height: 100%;
+    width: 20%;
+    background: linear-gradient(90deg, #2563eb, #7c3aed);
+    transition: width 0.3s;
+}
+
+.contador {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+#pergunta {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+
+/* =========================
+   ALTERNATIVAS DO QUIZ
+========================= */
+
+.alternativas {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.alternativa {
+    width: 100%;
+    padding: 14px 16px;
+    text-align: left;
+    background: #f8fafc;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    transition: 0.2s;
+}
+
+.alternativa:hover {
+    border-color: #6366f1;
+    background: #eef2ff;
+}
+
+.alternativa.selecionada {
+    border-color: #4f46e5;
+    background: #eef2ff;
+}
+
+.alternativa.correta {
+    border-color: #16a34a;
+    background: #dcfce7;
+}
+
+.alternativa.errada {
+    border-color: #dc2626;
+    background: #fee2e2;
+}
+
+.alternativa:disabled {
+    cursor: default;
+}
+
+
+/* =========================
+   BOTÃO PRÓXIMA
+========================= */
+
+.proxima {
+    width: 100%;
+    border: none;
+    padding: 13px;
+    border-radius: 10px;
+    background: #4f46e5;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.proxima:hover:not(:disabled) {
+    background: #3730a3;
+}
+
+.proxima:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   RESULTADO DO QUIZ
+========================= */
+
+.resultado {
+    display: none;
+    text-align: center;
+}
+
+.resultado.ativo {
+    display: block;
+}
+
+#quizConteudo.esconder {
+    display: none;
+}
+
+.trofeu {
+    font-size: 70px;
+    margin-bottom: 10px;
+}
+
+.resultado h2 {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+#pontuacao {
+    font-size: 22px;
+    font-weight: bold;
+    color: #4f46e5;
+    margin-bottom: 15px;
+}
+
+.mensagem-final {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+
+/* =========================
+   RESPONSIVIDADE
+========================= */
+
+@media (max-width: 700px) {
+
+    header {
+        padding: 20px 5% 45px;
+    }
+
+    .topo {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .logo {
+        text-align: center;
+        font-size: 26px;
+    }
+
+    nav {
+        width: 100%;
+    }
+
+    nav a {
+        flex: 1;
+        text-align: center;
+    }
+
+    .hero {
+        margin-top: 45px;
+    }
+
+    .hero h1 {
+        font-size: 40px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+
+    .pesquisa {
+        flex-direction: column;
+    }
+
+    .pesquisa input {
+        padding: 15px;
+    }
+
+    .pesquisa button {
+        padding: 13px;
+    }
+
+    main {
+        width: 90%;
+    }
+
+    .titulo-secao {
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .livros, .grid-compras {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .capa, .card-compra img {
+        height: 240px;
+    }
+
+    .informacoes {
+        padding: 14px;
+    }
+
+    .informacoes h3 {
+        font-size: 20px;
+    }
+
+    .quiz-modal {
+        padding: 25px 20px;
+    }
+
+}
+
+@media (max-width: 430px) {
+
+    .livros, .grid-compras {
+        grid-template-columns: 1fr;
+    }
+
+    .capa, .card-compra img {
+        height: 300px;
+    }
+
+    .titulo-secao {
+        flex-direction: column;
+    }
+
+}
+/* =========================
+   PÁGINA DE COMPRAS (COMPRAR.HTML)
+========================= */
+
+.grid-compras {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 30px;
+}
+
+.card-compra {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-compra:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-compra img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    background-color: #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.card-compra h3 {
+    font-family: 'Caveat', cursive;
+    font-size: 26px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.card-compra .autor {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.preco-destaque {
+    font-size: 24px;
+    font-weight: 800;
+    color: #16a34a;
+    margin: 12px 0;
+}
+
+.btn-amazon {
+    display: block;
+    background-color: #ff9900;
+    color: #111111;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-amazon:hover {
+    background-color: #e68a00;
+    transform: scale(1.02);
+}
+/* Cards com brilho neon ao passar o mouse */
+.livro, .card-compra {
+    background: rgba(15, 23, 42, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.livro:hover, .card-compra:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: #38bdf8;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+}
+
+/* Ajusta as cores do texto nos cards para dar leitura no escuro */
+.livro h3, .card-compra h3 {
+    color: #f8fafc !important;
+}
+
+.autor {
+    color: #94a3b8 !important;
+}
+.titulo-secao h2, 
+.titulo-secao {
+    color: #f8fafc !important;
+}

@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Livraria Diário de um Banana</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =========================
+         CABEÇALHO
+    ========================== -->
+
+    <header>
+
+        <div class="topo">
+
+            <div class="logo">
+                📚 Livraria
+                <span>Diário de um Banana</span>
+            </div>
+
+            <nav>
+                <a href="#biblioteca">Biblioteca</a>
+                <a href="#sobre">Sobre</a>
+                <a href="comprar.html" class="btn-comprar">Compre em Mãos 📖</a>
+              </nav>
+
+        </div>
+
+        <div class="hero">
+
+            <h1> Diário de um Banana</h1>
+
+            <p>
+                Explore a coleção e teste seus conhecimentos!
+            </p>
+
+        
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         CONTEÚDO
+    ========================== -->
+
+    <main id="biblioteca">
+        <div class="pesquisa">
+
+            <input
+                type="text"
+                id="campoPesquisa"
+                placeholder="Pesquisar livro..."
+                autocomplete="off"
+            >
+
+            <button
+                id="botaoPesquisa"
+                type="button"
+            >
+                Buscar
+            </button>
+
+        </div>
+
+        <section>
+
+            <div class="titulo-secao">
+
+                <div>
+                    <h2>📖Coleção</h2>
+                </div>
+
+                <span
+                    class="quantidade"
+                    id="quantidadeLivros"
+                >
+                    18 livros
+                </span>
+
+            </div>
+
+
+            <!-- MENSAGEM DE NENHUM RESULTADO -->
+
+            <div
+                id="nenhumResultado"
+                class="nenhum-resultado"
+            >
+                <div>🔍</div>
+
+                <h3>Nenhum livro encontrado</h3>
+
+                <p>
+                    Tente pesquisar por outro número ou título.
+                </p>
+            </div>
+
+
+            <!-- =========================
+                 LIVROS
+            ========================== -->
+
+            <div class="livros">
+
+
+                <!-- LIVRO 1 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://m.media-amazon.com/images/I/71fWaI5myqL._AC_UF1000,1000_QL80_.jpg"
+                            alt="Diário de um Banana"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 1</span>
+
+                        <h3>Diário de um Banana</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a
+                                href="../model/1.pdf"
+                                class="botao"
+                                target="_blank"
+                            >
+                                📖 Ver livro
+                            </a>
+
+                            <button
+                                class="botao quiz-botao"
+                                data-livro="1"
+                            >
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 2 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://cdn.kobo.com/book-images/9729c544-7f31-4bfd-a4e4-f02e3425a840/353/569/90/False/diario-de-um-banana-2-1.jpg"
+                            alt="Rodrick É o Cara"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 2</span>
+
+                        <h3>Rodrick É o Cara</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/2.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="2">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 3 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3q0ykl1YDyGYlFQg7PvEzVH9TJqCzNpCQesW5SbKrSg&s=10"
+                            alt="A Gota D'Água"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 3</span>
+
+                        <h3>A Gota D'Água</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/3.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="3">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 4 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://m.media-amazon.com/images/I/71MuD6Hn8OL.jpg"
+                            alt="Dias de Cão"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 4</span>
+
+                        <h3>Dias de Cão</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/4.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="4">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 5 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWNQ5Dyb75y6yEB-SUP87o3WAZUVkobZBUObLU5u2jGg&s=10"
+                            alt="A Verdade Nua e Crua"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 5</span>
+
+                        <h3>A Verdade Nua e Crua</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/5.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="5">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 6 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsynfhYfjFdkjck2ASrpkJPskWuNv2oFrg8dKrz2LjkQ&s=10"
+                            alt="Casa dos Horrores"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 6</span>
+
+                        <h3>Casa dos Horrores</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/6.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="6">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 7 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://m.media-amazon.com/images/I/71gWCy-KesL.jpg"
+                            alt="Segurando Vela"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 7</span>
+
+                        <h3>Segurando Vela</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/diario 7.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="7">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 8 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYsWa363Fk69UObxOlmPjLcYqOjS-x_OVaogubGts7Iw&s=10"
+                            alt="Maré de Azar"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 8</span>
+
+                        <h3>Maré de Azar</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="#" class="botao">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="8">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 9 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEGSCFaSf1UiBdwK_KsZy_aUNZbx_nmoRuxFGizDj5Aw&s=10"
+                            alt="Caindo na Estrada"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 9</span>
+
+                        <h3>Caindo na Estrada</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/9.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="9">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 10 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSW2UqhfbOPTlrqH4x74WBwBcbLFbewOcymQHxd3f1ccQ&s=10"
+                            alt="Bons Tempos"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 10</span>
+
+                        <h3>Bons Tempos</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/10.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="10">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 11 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJpnDlZb_Ii841UvyGFLjWaWiVlTkOMMahEKRInvdsMw&s=10"
+                            alt="Vai ou Racha"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 11</span>
+
+                        <h3>Vai ou Racha</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/11.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="11">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 12 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtJnki9qkkwZRnboDxHWdY_LFuJjg1tnqkOPfZCVLiEA&s=10"
+                            alt="Apertem os Cintos"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 12</span>
+
+                        <h3>Apertem os Cintos</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/12.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="12">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 13 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1zmVChnVKVNgkpYhOYrLucrfOTDiuo0lMqgKDonfRLw&s=10"
+                            alt="Batalha Neval"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 13</span>
+
+                        <h3>Batalha Neval</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/13.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="13">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 14 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRA7Blw3BEmS9oMvWnFY8QBuXw3lcOFM96cnIAHlwmqvQ&s=10"
+                            alt="Quebra Tudo"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 14</span>
+
+                        <h3>Quebra Tudo</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/14.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="14">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 15 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-ROlFFCyPp03KbqZ4IxjspagEBMkl2JaOTP3IW9ykqw&s=10"
+                            alt="Vai Fundo"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 15</span>
+
+                        <h3>Vai Fundo</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/15.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="15">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 16 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlfMX2xk-rqAEeKxjSJcR50HlWtApINaT1bOgPDqUzZQ&s=10"
+                            alt="Bola Fora"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 16</span>
+
+                        <h3>Bola Fora</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/16.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="16">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 17 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0MJHdtSofxsH0nfK3-T2ebQydAMmpuvfLHe0ukCyWEQ&s=10"
+                            alt="Fräwda Megaxeia"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 17</span>
+
+                        <h3>Fräwda Megaxeia</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="../model/17.pdf" class="botao" target="_blank">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="17">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LIVRO 18 -->
+
+                <article class="livro">
+
+                    <div class="capa">
+                        <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ71MQoFaVIzKqKwJqI16lYPP56-KqOGAKnGQOdchqagA&s=10"
+                            alt="Cabeça-Oca"
+                        >
+                    </div>
+
+                    <div class="informacoes">
+
+                        <span class="numero">Livro 18</span>
+
+                        <h3>Cabeça-Oca</h3>
+
+                        <p class="autor">Jeff Kinney</p>
+
+                        <p class="estrelas">★★★★★</p>
+
+                        <div class="botoes">
+
+                            <a href="#" class="botao">
+                                📖 Ver livro
+                            </a>
+
+                            <button class="botao quiz-botao" data-livro="18">
+                                🧠 Quiz
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             SOBRE
+        ========================== -->
+
+        <section class="sobre" id="sobre">
+            <h2>📚 Sobre a biblioteca</h2>
+            
+            <p>
+                A <strong>Livraria Diário de um Banana</strong> é um projeto dedicado a acender a paixão pela leitura em crianças, jovens e adultos de forma leve e divertida.
+            </p>
+        
+            <div class="sobre-cards">
+                <div class="card-info">
+                    <span>🎯</span>
+                    <h4>Nosso Objetivo</h4>
+                    <p>Resgatar o hábito de ler em meio ao excesso de telas e conteúdos rápidos.</p>
+                </div>
+        
+                <div class="card-info">
+                    <span>💡</span>
+                    <h4>Como Funciona</h4>
+                    <p>Unimos a coleção clássica dos livros a quizzes interativos para testar seus conhecimentos.</p>
+                </div>
+        
+                <div class="card-info">
+                    <span>🚀</span>
+                    <h4>Para Todos</h4>
+                    <p>Um espaço acessível tanto para quem está começando quanto para leitores de longa data.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <!-- =========================
+         QUIZ
+    ========================== -->
+
+    <div
+        class="quiz-overlay"
+        id="quizOverlay"
+    >
+
+        <div class="quiz-modal">
+
+            <button
+                class="fechar-quiz"
+                id="fecharQuiz"
+            >
+                ✕
+            </button>
+
+            <div id="quizConteudo">
+
+                <span class="quiz-livro" id="quizLivro">
+                    Livro 1
+                </span>
+
+                <h2 id="quizTitulo">
+                    🧠 Quiz
+                </h2>
+
+                <div class="progresso">
+
+                    <div
+                        class="progresso-barra"
+                        id="progressoBarra"
+                    ></div>
+
+                </div>
+
+                <p
+                    class="contador"
+                    id="contadorPergunta"
+                >
+                    Pergunta 1 de 5
+                </p>
+
+                <h3 id="pergunta">
+                    Pergunta
+                </h3>
+
+                <div
+                    class="alternativas"
+                    id="alternativas"
+                ></div>
+
+                <button
+                    class="proxima"
+                    id="proximaPergunta"
+                    disabled
+                >
+                    Próxima pergunta →
+                </button>
+
+            </div>
+
+            <div
+                class="resultado"
+                id="resultado"
+            >
+
+                <div class="trofeu">🏆</div>
+
+                <h2>Quiz concluído!</h2>
+
+                <p id="pontuacao"></p>
+
+                <div
+                    class="mensagem-final"
+                    id="mensagemFinal"
+                ></div>
+
+                <button
+                    class="proxima"
+                    id="refazerQuiz"
+                >
+                    🔄 Refazer quiz
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         RODAPÉ
+    ========================== -->
+
+    <footer>
+
+        <h3>
+            📚 Livraria Diário de um Banana
+        </h3>
+
+        <p>
+            Biblioteca virtual • 2026
+        </p>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
