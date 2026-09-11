@@ -12,7 +12,12 @@ body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     color: #1e293b;
     line-height: 1.6;
-    background-image: url("fundoo.png");
+    background-image:
+        linear-gradient(
+            rgba(245, 247, 250, 0.88),
+            rgba(0, 0, 0, 0.88)
+        ),
+        url("../Imagem/fundoo.png");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
