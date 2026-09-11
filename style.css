@@ -17,7 +17,7 @@ body {
             rgba(245, 247, 250, 0.88),
             rgba(0, 0, 0, 0.88)
         ),
-        url("../Imagem/fundoo.png");
+        url("fundoo.png");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
