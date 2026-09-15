@@ -17,7 +17,7 @@ body {
             rgba(245, 247, 250, 0.88),
             rgba(0, 0, 0, 0.88)
         ),
-        url("fundoo.png");
+        url("../Imagem/fundoo.png");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -737,3 +737,14 @@ footer p {
   .btn-amazon:hover {
     background-color: #f3b416;
   }
+  /* BOTÃO DE CADASTRO NO HEADER */
+nav a.btn-cadastro {
+    background-color: transparent;
+    color: #facc15;
+    border-color: #facc15;
+}
+
+nav a.btn-cadastro:hover {
+    background-color: #facc15;
+    color: #0f172a;
+}
