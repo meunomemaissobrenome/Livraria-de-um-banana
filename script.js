@@ -62,9 +62,13 @@ let conquistas = JSON.parse(localStorage.getItem('conquistasDiario')) || {
 };
 
 function atualizarbadgesUI() {
-    if (conquistas.especialista) document.getElementById('badgeEspecialista').classList.add('desbloqueada');
-    if (conquistas.voraz) document.getElementById('badgeVoraz').classList.add('desbloqueada');
-    if (conquistas.podre) document.getElementById('badgePodre').classList.add('desbloqueada');
+    const badgeEspecialista = document.getElementById('badgeEspecialista');
+    const badgeVoraz = document.getElementById('badgeVoraz');
+    const badgePodre = document.getElementById('badgePodre');
+
+    if (badgeEspecialista && conquistas.especialista) badgeEspecialista.classList.add('desbloqueada');
+    if (badgeVoraz && conquistas.voraz) badgeVoraz.classList.add('desbloqueada');
+    if (badgePodre && conquistas.podre) badgePodre.classList.add('desbloqueada');
 }
 atualizarbadgesUI();
 
@@ -90,15 +94,17 @@ function verificarConquistas(pontosObtidos, totalPerguntas, livroId) {
 // MODO RABISCO (ESTILO DIÁRIO) TOGGLE
 // ======================================================
 const btnRabisco = document.getElementById("btnRabisco");
-btnRabisco.addEventListener("click", () => {
-    tocarSom('clique');
-    document.body.classList.toggle("modo-rabisco");
-    if(document.body.classList.contains("modo-rabisco")) {
-        btnRabisco.textContent = "💻 Modo Normal";
-    } else {
-        btnRabisco.textContent = "✏️ Modo Diário";
-    }
-});
+if (btnRabisco) {
+    btnRabisco.addEventListener("click", () => {
+        tocarSom('clique');
+        document.body.classList.toggle("modo-rabisco");
+        if(document.body.classList.contains("modo-rabisco")) {
+            btnRabisco.textContent = "💻 Modo Normal";
+        } else {
+            btnRabisco.textContent = "✏️ Modo Diário";
+        }
+    });
+}
 
 // ======================================================
 // LIVRO SURPRESA (SORTEIO ALEATÓRIO)
@@ -106,22 +112,23 @@ btnRabisco.addEventListener("click", () => {
 const btnSorteio = document.getElementById("btnSorteio");
 const listaLivros = document.querySelectorAll(".livro");
 
-btnSorteio.addEventListener("click", (e) => {
-    e.preventDefault();
-    tocarSom('clique');
-    const randomIndex = Math.floor(Math.random() * listaLivros.length);
-    const livroSorteado = listaLivros[randomIndex];
+if (btnSorteio && listaLivros.length > 0) {
+    btnSorteio.addEventListener("click", (e) => {
+        e.preventDefault();
+        tocarSom('clique');
+        const randomIndex = Math.floor(Math.random() * listaLivros.length);
+        const livroSorteado = listaLivros[randomIndex];
 
-    // Remove destaque anterior se houver
-    listaLivros.forEach(l => l.classList.remove("destaque-sorteio"));
+        listaLivros.forEach(l => l.classList.remove("destaque-sorteio"));
 
-    livroSorteado.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    livroSorteado.classList.add("destaque-sorteio");
+        livroSorteado.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        livroSorteado.classList.add("destaque-sorteio");
 
-    setTimeout(() => {
-        livroSorteado.classList.remove("destaque-sorteio");
-    }, 3500);
-});
+        setTimeout(() => {
+            livroSorteado.classList.remove("destaque-sorteio");
+        }, 3500);
+    });
+}
 
 // ======================================================
 // PESQUISA INTELIGENTE
@@ -133,6 +140,7 @@ const quantidadeLivros = document.getElementById("quantidadeLivros");
 const textoResultado = document.getElementById("textoResultado");
 
 function pesquisarLivros() {
+    if (!campoPesquisa) return;
     const texto = campoPesquisa.value.toLowerCase().trim();
     let encontrados = 0;
 
@@ -150,26 +158,30 @@ function pesquisarLivros() {
         }
     });
 
-    quantidadeLivros.textContent = encontrados + (encontrados === 1 ? " livro" : " livros");
+    if (quantidadeLivros) quantidadeLivros.textContent = encontrados + (encontrados === 1 ? " livro" : " livros");
 
     if (encontrados === 0) {
-        nenhumResultado.style.display = "block";
-        textoResultado.textContent = "Nenhum livro corresponde à sua pesquisa.";
+        if (nenhumResultado) nenhumResultado.style.display = "block";
+        if (textoResultado) textoResultado.textContent = "Nenhum livro corresponde à sua pesquisa.";
     } else {
-        nenhumResultado.style.display = "none";
-        if (texto === "") {
-            textoResultado.textContent = "Todos os livros disponíveis.";
-        } else {
-            textoResultado.textContent = encontrados + (encontrados === 1 ? " livro encontrado." : " livros encontrados.");
+        if (nenhumResultado) nenhumResultado.style.display = "none";
+        if (textoResultado) {
+            if (texto === "") {
+                textoResultado.textContent = "Todos os livros disponíveis.";
+            } else {
+                textoResultado.textContent = encontrados + (encontrados === 1 ? " livro encontrado." : " livros encontrados.");
+            }
         }
     }
 }
 
-campoPesquisa.addEventListener("input", pesquisarLivros);
-botaoPesquisa.addEventListener("click", pesquisarLivros);
-campoPesquisa.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") { pesquisarLivros(); }
-});
+if (campoPesquisa) {
+    campoPesquisa.addEventListener("input", pesquisarLivros);
+    botaoPesquisa.addEventListener("click", pesquisarLivros);
+    campoPesquisa.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") { pesquisarLivros(); }
+    });
+}
 
 // ======================================================
 // QUIZ E BANCO DE DADOS DE PERGUNTAS
@@ -259,15 +271,16 @@ document.querySelectorAll(".quiz-botao").forEach(function(botao) {
 });
 
 function iniciarQuiz() {
+    if (!quizOverlay) return;
     perguntaAtual = 0;
     pontos = 0;
     respostaSelecionada = false;
     quizOverlay.classList.add("ativo");
     document.body.style.overflow = "hidden";
-    quizConteudo.classList.remove("esconder");
-    resultado.classList.remove("ativo");
-    quizLivro.textContent = "Livro " + livroAtual;
-    quizTitulo.textContent = "🧠 Quiz - Diário de um Banana " + livroAtual;
+    if (quizConteudo) quizConteudo.classList.remove("esconder");
+    if (resultado) resultado.classList.remove("ativo");
+    if (quizLivro) quizLivro.textContent = "Livro " + livroAtual;
+    if (quizTitulo) quizTitulo.textContent = "🧠 Quiz - Diário de um Banana " + livroAtual;
     mostrarPergunta();
 }
 
@@ -275,12 +288,12 @@ function mostrarPergunta() {
     const perguntasDoLivro = quizzes[livroAtual];
     const dados = perguntasDoLivro[perguntaAtual];
     respostaSelecionada = false;
-    proximaPergunta.disabled = true;
+    if (proximaPergunta) proximaPergunta.disabled = true;
 
-    contadorPergunta.textContent = "Pergunta " + (perguntaAtual + 1) + " de " + perguntasDoLivro.length;
-    progressoBarra.style.width = (((perguntaAtual + 1) / perguntasDoLivro.length) * 100) + "%";
-    pergunta.textContent = dados.pergunta;
-    alternativas.innerHTML = "";
+    if (contadorPergunta) contadorPergunta.textContent = "Pergunta " + (perguntaAtual + 1) + " de " + perguntasDoLivro.length;
+    if (progressoBarra) progressoBarra.style.width = (((perguntaAtual + 1) / perguntasDoLivro.length) * 100) + "%";
+    if (pergunta) pergunta.textContent = dados.pergunta;
+    if (alternativas) alternativas.innerHTML = "";
 
     dados.alternativas.forEach(function(opcao, indice) {
         const botao = document.createElement("button");
@@ -290,13 +303,15 @@ function mostrarPergunta() {
             tocarSom('clique');
             selecionarResposta(indice, botao);
         });
-        alternativas.appendChild(botao);
+        if (alternativas) alternativas.appendChild(botao);
     });
 
-    if (perguntaAtual === perguntasDoLivro.length - 1) {
-        proximaPergunta.textContent = "Finalizar quiz ✓";
-    } else {
-        proximaPergunta.textContent = "Próxima pergunta →";
+    if (proximaPergunta) {
+        if (perguntaAtual === perguntasDoLivro.length - 1) {
+            proximaPergunta.textContent = "Finalizar quiz ✓";
+        } else {
+            proximaPergunta.textContent = "Próxima pergunta →";
+        }
     }
 }
 
@@ -318,63 +333,93 @@ function selecionarResposta(indiceEscolhido, botaoEscolhido) {
         botaoEscolhido.classList.add("errada");
         botoes[dados.correta].classList.add("correta");
     }
-    proximaPergunta.disabled = false;
+    if (proximaPergunta) proximaPergunta.disabled = false;
 }
 
-proximaPergunta.addEventListener("click", function() {
-    if (!respostaSelecionada) { return; }
-    tocarSom('clique');
-    const total = quizzes[livroAtual].length;
+if (proximaPergunta) {
+    proximaPergunta.addEventListener("click", function() {
+        if (!respostaSelecionada) { return; }
+        tocarSom('clique');
+        const total = quizzes[livroAtual].length;
 
-    if (perguntaAtual < total - 1) {
-        perguntaAtual++;
-        mostrarPergunta();
-    } else {
-        mostrarResultado();
-    }
-});
+        if (perguntaAtual < total - 1) {
+            perguntaAtual++;
+            mostrarPergunta();
+        } else {
+            mostrarResultado();
+        }
+    });
+}
 
 function mostrarResultado() {
-    quizConteudo.classList.add("esconder");
-    resultado.classList.add("ativo");
+    if (quizConteudo) quizConteudo.classList.add("esconder");
+    if (resultado) resultado.classList.add("ativo");
     const total = quizzes[livroAtual].length;
 
-    pontuacao.textContent = pontos + " de " + total + " respostas corretas";
+    if (pontuacao) pontuacao.textContent = pontos + " de " + total + " respostas corretas";
     verificarConquistas(pontos, total, livroAtual);
 
-    if (pontos === total) {
-        tocarSom('vitoria');
-        mensagemFinal.textContent = "🏆 Perfeito! Você acertou todas!";
-    } else if (pontos >= 4) {
-        tocarSom('acerto');
-        mensagemFinal.textContent = "🔥 Muito bem! Você conhece bastante a série!";
-    } else if (pontos >= 3) {
-        mensagemFinal.textContent = "👏 Bom trabalho! Você foi muito bem.";
-    } else if (pontos >= 2) {
-        mensagemFinal.textContent = "🙂 Você foi bem, mas pode tentar novamente.";
-    } else {
-        mensagemFinal.textContent = "🍌 Que tal tentar novamente e melhorar sua pontuação?";
+    if (mensagemFinal) {
+        if (pontos === total) {
+            tocarSom('vitoria');
+            mensagemFinal.textContent = "🏆 Perfeito! Você acertou todas!";
+        } else if (pontos >= 4) {
+            tocarSom('acerto');
+            mensagemFinal.textContent = "🔥 Muito bem! Você conhece bastante a série!";
+        } else if (pontos >= 3) {
+            mensagemFinal.textContent = "👏 Bom trabalho! Você foi muito bem.";
+        } else if (pontos >= 2) {
+            mensagemFinal.textContent = "🙂 Você foi bem, mas pode tentar novamente.";
+        } else {
+            mensagemFinal.textContent = "🍌 Que tal tentar novamente e melhorar sua pontuação?";
+        }
     }
 }
 
-refazerQuiz.addEventListener("click", function() {
-    tocarSom('clique');
-    iniciarQuiz();
-});
+if (refazerQuiz) {
+    refazerQuiz.addEventListener("click", function() {
+        tocarSom('clique');
+        iniciarQuiz();
+    });
+}
 
 function fecharModalQuiz() {
     tocarSom('clique');
-    quizOverlay.classList.remove("ativo");
+    if (quizOverlay) quizOverlay.classList.remove("ativo");
     document.body.style.overflow = "";
 }
 
-fecharQuiz.addEventListener("click", fecharModalQuiz);
-quizOverlay.addEventListener("click", function(event) {
-    if (event.target === quizOverlay) { fecharModalQuiz(); }
-});
+if (fecharQuiz) fecharQuiz.addEventListener("click", fecharModalQuiz);
+if (quizOverlay) {
+    quizOverlay.addEventListener("click", function(event) {
+        if (event.target === quizOverlay) { fecharModalQuiz(); }
+    });
+}
 
 document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape" && quizOverlay.classList.contains("ativo")) {
+    if (event.key === "Escape" && quizOverlay && quizOverlay.classList.contains("ativo")) {
         fecharModalQuiz();
     }
 });
+
+// ======================================================
+// SISTEMA DE CADASTRO DE USUÁRIOS (Novo!)
+// ======================================================
+const formCadastro = document.getElementById("formCadastro");
+if (formCadastro) {
+    formCadastro.addEventListener("submit", function(e) {
+        e.preventDefault();
+        tocarSom('clique');
+
+        const nome = document.getElementById("nome").value;
+        const email = document.getElementById("email").value;
+        const senha = document.getElementById("senha").value;
+
+        // Salva os dados do usuário no localStorage
+        const novoUsuario = { nome, email, senha, data: new Date().toLocaleDateString() };
+        localStorage.setItem("usuarioLogadoDiario", JSON.stringify(novoUsuario));
+
+        alert(`Parabéns, ${nome}! Sua conta na Livraria Diário de um Banana foi criada com sucesso! 🍌`);
+        window.location.href = "index.html";
+    });
+}
