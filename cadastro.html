@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Livraria Diário de um Banana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .corpo-cadastro {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .box-cadastro {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            color: white;
+        }
+        .box-cadastro h2 {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 36px;
+            color: #facc15;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .campo-form {
+            margin-bottom: 20px;
+        }
+        .campo-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+        .campo-form input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+        .campo-form input:focus {
+            border-color: #facc15;
+        }
+        .btn-enviar-cadastro {
+            width: 100%;
+            background: #facc15;
+            color: #0f172a;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-enviar-cadastro:hover {
+            background: #eab308;
+        }
+        .voltar-home {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .voltar-home:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body class="corpo-cadastro">
+
+    <div class="box-cadastro">
+        <h2>Criar Conta 🍌</h2>
+        <form onsubmit="event.preventDefault(); alert('Cadastro realizado com sucesso!'); window.location.href='index.html';">
+            <div class="campo-form">
+                <label for="nome">Nome Completo</label>
+                <input type="text" id="nome" required placeholder="Ex: Greg Heffley">
+            </div>
+            <div class="campo-form">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" required placeholder="seu@email.com">
+            </div>
+            <div class="campo-form">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" required placeholder="Sua senha secreta">
+            </div>
+            <button type="submit" class="btn-enviar-cadastro">Cadastrar</button>
+        </form>
+        <a href="index.html" class="voltar-home">← Voltar para a Página Inicial</a>
+    </div>
+
+</body>
+</html>
