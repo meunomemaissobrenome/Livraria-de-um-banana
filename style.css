@@ -4,474 +4,367 @@
     box-sizing: border-box;
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
 body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: #1e293b;
-    line-height: 1.6;
-    background-image:
-        linear-gradient(
-            rgba(245, 247, 250, 0.88),
-            rgba(0, 0, 0, 0.88)
-        ),
-        url("fundoo.png");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    transition: font-family 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f6f9;
+    color: #334155;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-/* MODO RABISCO (ESTILO DIÁRIO) */
-body.modo-rabisco {
+/* MODO DIÁRIO (RABISCO) */
+body.modo-diario {
     font-family: 'Patrick Hand', cursive !important;
+    background-color: #fef9c3 !important;
 }
-body.modo-rabisco h3, body.modo-rabisco h1, body.modo-rabisco .logo {
+body.modo-diario h2, body.modo-diario h3, body.modo-diario .logo {
     font-family: 'Caveat', cursive !important;
 }
 
-/* PAINEL DE CONQUISTAS FLUTUANTE */
-.painel-conquistas {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background: rgba(15, 23, 42, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 12px 18px;
-    border-radius: 12px;
-    color: white;
-    z-index: 998;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-    backdrop-filter: blur(5px);
-}
-.painel-conquistas h3 {
-    font-size: 14px;
-    margin-bottom: 8px;
-    color: #facc15;
-}
-.lista-badges {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-.badge {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 11px;
-    opacity: 0.3;
-    filter: grayscale(100%);
-    transition: all 0.3s ease;
-}
-.badge.desbloqueada {
-    opacity: 1;
-    filter: grayscale(0%);
-    border-color: #facc15;
-    background: rgba(250, 204, 21, 0.2);
-    color: #facc15;
+/* HEADER ESTILO BIBLIOTECA */
+.site-header {
+    background-color: #193261;
+    color: #fff;
+    padding: 15px 5%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-/* BOTÃO MODO RABISCO */
-.btn-rabisco {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #facc15;
-    color: #0f172a;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 30px;
-    font-weight: 700;
-    cursor: pointer;
-    z-index: 998;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    transition: transform 0.2s;
-}
-.btn-rabisco:hover {
-    transform: scale(1.05);
-}
-
-/* DESTAQUE SORTEIO LIVRO */
-.destaque-sorteio {
-    border-color: #facc15 !important;
-    box-shadow: 0 0 30px rgba(250, 204, 21, 0.8) !important;
-    transform: translateY(-10px) scale(1.04);
-}
-
-/* =========================
-   HEADER & NAVEGAÇÃO
-========================= */
-header {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-    color: white;
-    padding: 25px 7% 65px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-}
-
-.topo {
-    max-width: 1300px;
-    margin: auto;
+.header-container {
+    max-width: 1350px;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 20px;
 }
 
 .logo {
     font-family: 'Patrick Hand', cursive;
-    font-size: 32px;
-    letter-spacing: 0.5px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 28px;
+    font-weight: bold;
 }
 
 .logo span {
     color: #facc15;
 }
 
-nav {
+.nav-links {
     display: flex;
-    gap: 12px;
+    gap: 20px;
+    align-items: center;
 }
 
-nav a {
-    font-family: 'Inter', sans-serif;
-    color: white;
+.nav-links a {
+    color: #e2e8f0;
     text-decoration: none;
-    padding: 9px 18px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 15px;
-    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
 }
 
-nav a:hover {
-    background: #facc15;
-    color: #0f172a;
-    border-color: #facc15;
-    transform: translateY(-2px);
+.nav-links a:hover, .nav-links a.ativo {
+    color: #facc15;
 }
 
-nav a.btn-comprar {
-    background-color: #facc15;
-    color: #0f172a;
-    border-color: #facc15;
+/* LAYOUT PRINCIPAL (GRID COM SIDEBAR) */
+.main-layout {
+    max-width: 1350px;
+    width: 92%;
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 30px;
+    flex: 1;
 }
 
-nav a.btn-comprar:hover {
-    background-color: #eab308;
-}
-
-/* =========================
-   HERO
-========================= */
-.hero {
-    max-width: 850px;
-    margin: 55px auto 0;
-    text-align: center;
-}
-
-.hero h1 {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 56px;
-    line-height: 1.1;
-    margin-bottom: 12px;
-    color: #ffffff;
-    letter-spacing: 1px;
-}
-
-.hero p {
-    font-family: 'Inter', sans-serif;
-    font-size: 18px;
-    color: #cbd5e1;
-    font-weight: 400;
-    margin-bottom: 30px;
-}
-
-/* =========================
-   PESQUISA
-========================= */
-.pesquisa {
-    max-width: 650px;
-    margin: auto;
+/* SIDEBAR ESQUERDA */
+.sidebar {
     display: flex;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    flex-direction: column;
+    gap: 20px;
 }
 
-.pesquisa input {
+.sidebar-box {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.sidebar-box h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #1e293b;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 8px;
+}
+
+.categoria-lista {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cat-btn {
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #475569;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+
+.cat-btn:hover, .cat-btn.ativo {
+    background-color: #fef08a;
+    color: #713f12;
+    font-weight: 600;
+}
+
+.objetivo-box p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #64748b;
+}
+
+/* ÁREA DE CONTEÚDO */
+.content-area {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* BARRA DE PESQUISA */
+.barra-pesquisa-container {
+    display: flex;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.barra-pesquisa-container input {
     flex: 1;
     border: none;
+    padding: 14px 18px;
+    font-size: 15px;
     outline: none;
-    padding: 16px 20px;
-    font-size: 16px;
-    font-family: 'Inter', sans-serif;
-    color: #222;
+    background: transparent;
 }
 
-.pesquisa button {
-    border: none;
+.barra-pesquisa-container button {
     background: #facc15;
-    color: #222;
-    padding: 0 22px;
-    font-size: 18px;
+    border: none;
+    padding: 0 20px;
+    font-size: 16px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background 0.2s;
 }
 
-.pesquisa button:hover {
+.barra-pesquisa-container button:hover {
     background: #eab308;
 }
 
-/* =========================
-   MAIN
-========================= */
-main {
-    width: 76%;
-    max-width: 1300px;
-    margin: 45px auto;
-}
-
-.titulo-secao {
+.secao-titulo {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
 }
 
-.titulo-secao h2 {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 38px;
-    color: #f8fafc !important;
-    letter-spacing: 0.5px;
+.secao-titulo h2 {
+    font-size: 20px;
+    color: #1e293b;
 }
 
-.titulo-secao p {
-    color: #94a3b8;
-    font-size: 15px;
-}
-
-.quantidade {
-    background: #ede9fe;
-    color: #5b21b6;
-    padding: 7px 16px;
+#contadorLivros {
+    font-size: 13px;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 5px 12px;
     border-radius: 20px;
-    font-size: 14px;
-    font-weight: 700;
 }
 
 .nenhum-resultado {
-    display: none;
-    background: rgba(15, 23, 42, 0.9);
-    color: white;
-    padding: 45px 20px;
-    margin-bottom: 30px;
+    background: #fff;
+    padding: 30px;
     text-align: center;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-radius: 8px;
+    font-weight: 500;
+    color: #64748b;
 }
 
-.nenhum-resultado div {
-    font-size: 45px;
-    margin-bottom: 10px;
-}
-
-.nenhum-resultado h3 {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 28px;
-    margin-bottom: 5px;
-}
-
-.nenhum-resultado p {
-    color: #94a3b8;
-}
-
-/* =========================
-   GRID & CARD DOS LIVROS
-========================= */
-.livros {
+/* GRID DE LIVROS */
+.grid-livros {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 45px;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 20px;
 }
 
-.livro, .card-compra {
-    background: rgba(15, 23, 42, 0.8) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
+.livro-card {
+    background: #fff;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.04);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
 }
 
-.livro:hover, .card-compra:hover {
-    transform: translateY(-8px) scale(1.02);
-    border-color: #38bdf8;
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+.livro-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
 }
 
-.capa {
+.tag-genero {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(74, 21, 27, 0.85);
+    color: white;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    z-index: 2;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.capa-livro {
     width: 100%;
-    height: 350px;
-    background: #e5e7eb;
+    height: 270px;
+    background: #e2e8f0;
     overflow: hidden;
 }
 
-.capa img {
-    width: 103%;
-    height: 103%;
+.capa-livro img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    display: block;
-    transition: transform 0.4s;
+    transition: transform 0.3s;
 }
 
-.livro:hover .capa img {
+.livro-card:hover .capa-livro img {
     transform: scale(1.05);
 }
 
-.informacoes {
-    padding: 18px;
+.info-livro {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    justify-content: space-between;
 }
 
-.numero {
-    display: inline-block;
-    background: #ede9fe;
-    color: #5b21b6;
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 10px;
+.num-livro {
+    font-size: 11px;
+    font-weight: 600;
+    color: #252668;
 }
 
-.informacoes h3, .card-compra h3 {
-    font-family: 'Caveat', cursive;
-    font-size: 24px;
-    font-weight: 700;
-    color: #f8fafc !important;
-    margin-bottom: 3px;
+.info-livro h3 {
+    font-size: 16px;
+    color: #1e293b;
     line-height: 1.2;
 }
 
 .autor {
-    color: #94a3b8 !important;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.avaliacao {
     font-size: 13px;
-    margin-bottom: 8px;
-}
-
-.estrelas {
     color: #f59e0b;
-    letter-spacing: 2px;
-    margin-bottom: 15px;
 }
 
-.botoes {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.avaliacao span {
+    color: #64748b;
+    font-size: 11px;
 }
 
-.botao {
+.badge-gratuito {
+    font-size: 11px;
+    color: #16a34a;
+    font-weight: 600;
+}
+
+/* BOTÃO VER LIVRO */
+.btn-ver-livro {
     display: block;
     width: 100%;
+    padding: 10px;
+    background-color: #2563eb;
+    color: #ffffff !important;
     text-align: center;
     text-decoration: none;
-    border: none;
-    background: #4f46e5;
+    font-weight: 600;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-ver-livro:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.btn-ler {
+    margin-top: 8px;
+    background: #2563eb;
     color: white;
-    padding: 11px;
-    border-radius: 8px;
+    border: none;
+    padding: 9px;
+    border-radius: 6px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    font-size: 14px;
-    transition: 0.3s;
+    transition: background 0.2s;
+    text-align: center;
 }
 
-.botao:hover {
-    background: #3730a3;
-}
-
-.quiz-botao {
-    background: #2563eb;
-}
-
-.quiz-botao:hover {
+.btn-ler:hover {
     background: #1d4ed8;
 }
 
-/* =========================
-   SOBRE & FOOTER
-========================= */
-.sobre {
-    margin-top: 60px;
-    padding: 40px;
-    background: rgba(15, 23, 42, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-.sobre h2 {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 36px;
-    margin-bottom: 10px;
-    color: #f8fafc;
-}
-
-.sobre p {
-    max-width: 700px;
-    margin: auto;
-    color: #cbd5e1;
-    font-size: 16px;
-    line-height: 1.7;
-}
-
-footer {
-    background: #0f172a;
-    color: white;
-    text-align: center;
-    padding: 35px;
-    margin-top: 60px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-footer h3 {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 26px;
-    margin-bottom: 5px;
-}
-
-footer p {
+/* RODAPÉ */
+.site-footer {
+    background: #1e293b;
     color: #94a3b8;
-    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+    font-size: 13px;
+    margin-top: 40px;
 }
 
-/* =========================
-   MODAL DO QUIZ
-========================= */
+/* MODAL DE QUIZ */
 .quiz-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(4px);
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(3px);
     display: none;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    z-index: 9999;
+    z-index: 1000;
 }
 
 .quiz-overlay.ativo {
@@ -479,67 +372,50 @@ footer p {
 }
 
 .quiz-modal {
-    position: relative;
+    background: #fff;
     width: 100%;
-    max-width: 650px;
-    max-height: 90vh;
-    overflow-y: auto;
-    background: #1e293b;
-    color: white;
-    border-radius: 20px;
-    padding: 35px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    animation: aparecer 0.25s ease;
-}
-
-@keyframes aparecer {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+    max-width: 550px;
+    border-radius: 12px;
+    padding: 30px;
+    position: relative;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
 }
 
 .fechar-quiz {
     position: absolute;
-    right: 20px;
-    top: 18px;
+    right: 15px;
+    top: 15px;
+    background: #f1f5f9;
     border: none;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    width: 38px;
-    height: 38px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
-    transition: 0.2s;
 }
 
-.fechar-quiz:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.quiz-livro {
+.quiz-livro-tag {
     display: inline-block;
-    background: #ede9fe;
-    color: #5b21b6;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 13px;
+    background: #e0e7ff;
+    color: #3730a3;
+    font-size: 11px;
     font-weight: 700;
-    margin-bottom: 10px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
 }
 
 .quiz-modal h2 {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 34px;
-    margin-bottom: 20px;
-    color: #f8fafc;
+    font-size: 22px;
+    color: #1e293b;
+    margin-bottom: 15px;
 }
 
-.progresso {
+.progresso-container {
     width: 100%;
-    height: 9px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
+    height: 6px;
+    background: #f1f5f9;
+    border-radius: 3px;
     overflow: hidden;
     margin-bottom: 10px;
 }
@@ -547,204 +423,484 @@ footer p {
 .progresso-barra {
     height: 100%;
     width: 20%;
-    background: linear-gradient(90deg, #2563eb, #7c3aed);
+    background: #2563eb;
     transition: width 0.3s;
 }
 
-.contador {
-    color: #94a3b8;
-    font-size: 14px;
-    margin-bottom: 20px;
+.contador-pergunta {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 15px;
 }
 
-#pergunta {
-    font-size: 20px;
+.pergunta-texto {
+    font-size: 16px;
     font-weight: 600;
-    margin-bottom: 20px;
-    color: #f8fafc;
+    color: #1e293b;
+    margin-bottom: 15px;
 }
 
-.alternativas {
+.alternativas-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 20px;
 }
 
-.alternativa {
+.btn-alternativa {
     width: 100%;
-    padding: 14px 16px;
+    padding: 12px;
     text-align: left;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
     cursor: pointer;
-    font-size: 15px;
-    color: white;
-    font-family: 'Inter', sans-serif;
     transition: 0.2s;
 }
 
-.alternativa:hover {
-    border-color: #38bdf8;
-    background: rgba(56, 189, 248, 0.1);
+.btn-alternativa:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
 }
 
-.alternativa.correta {
+.btn-alternativa.correta {
+    background: #dcfce7;
     border-color: #16a34a;
-    background: rgba(22, 163, 74, 0.2);
+    color: #166534;
 }
 
-.alternativa.errada {
+.btn-alternativa.errada {
+    background: #fee2e2;
     border-color: #dc2626;
-    background: rgba(220, 38, 38, 0.2);
+    color: #991b1b;
 }
 
-.alternativa:disabled {
-    cursor: default;
-}
-
-.proxima {
+.btn-proxima {
     width: 100%;
-    border: none;
-    padding: 13px;
-    border-radius: 10px;
-    background: #4f46e5;
+    background: #2563eb;
     color: white;
-    font-size: 16px;
-    font-weight: 700;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.3s;
 }
 
-.proxima:hover:not(:disabled) {
-    background: #3730a3;
-}
-
-.proxima:disabled {
+.btn-proxima:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.resultado {
-    display: none;
+.resultado-container {
     text-align: center;
+    padding: 20px 0;
 }
 
-.resultado.ativo {
-    display: block;
-}
-
-#quizConteudo.esconder {
-    display: none;
-}
-
-.trofeu {
-    font-size: 70px;
+.trofeu-icone {
+    font-size: 50px;
     margin-bottom: 10px;
 }
 
-#pontuacao {
-    font-size: 22px;
-    font-weight: bold;
-    color: #38bdf8;
-    margin-bottom: 15px;
+#pontuacaoTexto {
+    font-size: 20px;
+    color: #1e293b;
+    margin-bottom: 10px;
 }
 
 .mensagem-final {
-    color: #cbd5e1;
-    margin-bottom: 25px;
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 20px;
 }
 
-/* RESPONSIVIDADE */
-@media (max-width: 700px) {
-    header { padding: 20px 5% 45px; }
-    .topo { flex-direction: column; gap: 20px; }
-    .logo { text-align: center; font-size: 26px; }
-    nav { width: 100%; flex-wrap: wrap; justify-content: center; }
-    nav a { flex: 1; text-align: center; min-width: 110px; }
-    .hero h1 { font-size: 40px; }
-    .pesquisa { flex-direction: column; }
-    main { width: 90%; }
-    .livros { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-    .capa { height: 240px; }
-    .painel-conquistas { display: none; } /* Ocultar em telas muito pequenas para não poluir */
+/* PÁGINA DE COMPRAS */
+.main-compras {
+    max-width: 1350px;
+    width: 92%;
+    margin: 30px auto;
+    flex: 1;
 }
 
-@media (max-width: 430px) {
-    .livros { grid-template-columns: 1fr; }
-    .capa { height: 300px; }
-}
-/* Estilo para os cards de compra da página de livros físicos */
-.grid-compras {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  .card-compra {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
+.hero-compras {
+    background: #4a151b;
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.hero-compras h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.hero-compras p {
+    font-size: 15px;
+    color: #e2e8f0;
+}
+
+.grid-compras {
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 20px;
+}
+
+.card-compra {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.04);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-  }
-  
-  /* CORREÇÃO DA IMAGEM DA CAPA */
-  .card-compra img {
-    width: 150px;         /* Define uma largura fixa padrão */
-    height: 220px;        /* Define uma altura fixa para todas as capas ficarem uniformes */
-    object-fit: cover;    /* Garante que a imagem não distorça, cortando o excesso se necessário */
-    margin: 0 auto 15px auto; /* Centraliza a imagem no card */
-    border-radius: 4px;
-  }
-  
-  .card-compra h3 {
-    font-size: 1.1rem;
-    margin-bottom: 5px;
-    color: #333;
-  }
-  
-  .card-compra .autor {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 10px;
-  }
-  
-  .preco-destaque {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #27ae60;
-    margin-bottom: 15px;
-  }
-  
-  .btn-amazon {
-    display: inline-block;
-    background-color: #f0c14b;
-    color: #111;
-    padding: 10px 15px;
-    border-radius: 4px;
-    text-decoration: none;
-    font-weight: bold;
-    border: 1px solid #a88734;
-    transition: background-color 0.2s;
-  }
-  
-  .btn-amazon:hover {
-    background-color: #f3b416;
-  }
-  /* BOTÃO DE CADASTRO NO HEADER */
-nav a.btn-cadastro {
-    background-color: transparent;
-    color: #facc15;
-    border-color: #facc15;
+    padding: 15px;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-nav a.btn-cadastro:hover {
-    background-color: #facc15;
-    color: #0f172a;
+.card-compra:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
 }
+
+.card-compra img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.card-compra h3 {
+    font-size: 15px;
+    color: #1e293b;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+.card-compra .autor {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.preco {
+    color: #16a34a !important;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.btn-amazon {
+    background: #f59e0b;
+    color: #1e293b;
+    text-decoration: none;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    transition: background 0.2s;
+}
+
+.btn-amazon:hover {
+    background: #d97706;
+    color: #fff;
+}
+
+/* --- MODO NOTURNO (DARK MODE) SEGURO --- */
+body.dark-mode {
+    background-color: #121212 !important;
+}
+
+body.dark-mode .site-header,
+body.dark-mode .sidebar-box,
+body.dark-mode .livro-card,
+body.dark-mode .card-compra,
+body.dark-mode .barra-pesquisa-container,
+body.dark-mode .barra-pesquisa-container input,
+body.dark-mode .secao-titulo,
+body.dark-mode .nenhum-resultado,
+body.dark-mode .quiz-modal {
+    background-color: #1e1e1e !important;
+    border-color: #334155 !important;
+}
+
+/* RESPONSIVO */
+@media(max-width: 900px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+    .sidebar {
+        display: none;
+    }
+}
+/* --- CORREÇÃO DEFINITIVA DE TEXTOS NO MODO ESCURO --- */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode a,
+body.dark-mode .info-livro h3,
+body.dark-mode .autor,
+body.dark-mode .sidebar-box p,
+body.dark-mode .cat-btn,
+body.dark-mode #contadorLivros,
+body.dark-mode .objetivo-box p {
+    color: #f8fafc !important;
+}
+
+/* Mantém os preços e botões com suas cores de destaque legíveis */
+body.dark-mode .preco,
+body.dark-mode .badge-gratuito {
+    color: #4ade80 !important;
+}
+
+body.dark-mode .cat-btn:hover, 
+body.dark-mode .cat-btn.ativo {
+    color: #713f12 !important; /* Mantém o contraste nos botões selecionados da sidebar */
+}
+.grid-compras {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 20px;
+}
+/* --- MODO ESCURO PARA O COMPRAR.HTML --- */
+body.dark-mode .main-compras {
+    background-color: #0f172a;
+}
+
+body.dark-mode .hero-compras {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border: 1px solid #334155;
+}
+
+body.dark-mode .card-compra {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #f8fafc !important;
+}
+
+body.dark-mode .card-compra h3,
+body.dark-mode .card-compra p,
+body.dark-mode .card-compra .autor {
+    color: #f8fafc !important;
+}
+
+body.dark-mode .card-compra .preco {
+    color: #4ade80 !important;
+}
+/* ==========================================
+   RESPONSIVIDADE PARA CELULARES E TABLETS (MEDIA QUERIES)
+   ========================================== */
+
+@media screen and (max-width: 768px) {
+    /* 1. Ajuste geral do corpo e container */
+    body {
+        overflow-x: hidden;
+    }
+
+    /* 2. Cabeçalho Responsivo (Empilha o logo e os links) */
+    .header-container, .site-header .header-container {
+        flex-direction: column !important;
+        align-items: center !important;
+        padding: 10px !important;
+        text-align: center;
+    }
+
+    .logo {
+        margin-bottom: 10px;
+        font-size: 22px;
+    }
+
+    .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 5px;
+    }
+
+    .nav-links a, .nav-links button {
+        font-size: 13px !important;
+        padding: 6px 10px !important;
+    }
+
+    /* 3. Layout principal: Transforma a barra lateral (sidebar) e conteúdo em coluna única */
+    .main-container, .conteudo-principal {
+        flex-direction: column !important;
+        padding: 10px !important;
+    }
+
+    /* Sidebar passa a ficar no topo ou em bloco normal */
+    .sidebar, aside {
+        width: 100% !important;
+        margin-bottom: 20px;
+    }
+
+    /* 4. Grade de Livros adaptada para 1 ou 2 colunas no celular */
+    .grid-livros, .grid-compras {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+        gap: 15px !important;
+        padding: 0 5px !important;
+    }
+
+    .livro-card, .card-compra {
+        width: 100% !important;
+        margin: 0 auto;
+    }
+
+    /* 5. Barra de Pesquisa */
+    .barra-pesquisa, .pesquisa-container {
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+
+    #campoPesquisa {
+        width: 100% !important;
+        margin-bottom: 8px;
+    }
+
+    #botaoPesquisa {
+        width: 100% !important;
+    }
+}/* ==========================================
+   FORÇAR EXIBIÇÃO DA BIBLIOTECA VIRTUAL NO CELULAR
+   ========================================== */
+@media screen and (max-width: 768px) {
+    /* Garante que o menu lateral apareça e não fique oculto */
+    .sidebar, 
+    aside, 
+    .menu-lateral {
+        display: block !important;
+        width: 100% !important;
+        background-color: #ffffff;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Modo escuro para a sidebar no celular */
+    body.dark-mode .sidebar, 
+    body.dark-mode aside, 
+    body.dark-mode .menu-lateral {
+        background-color: #1e293b !important;
+        color: #f8fafc !important;
+        border: 1px solid #334155;
+    }
+
+    /* Organiza os botões de categoria lado a lado ou em bloco legível no celular */
+    .sidebar .cat-btn, 
+    aside button {
+        width: 100%;
+        text-align: left;
+        margin-bottom: 5px;
+    }
+}
+/* ==========================================================================
+   EFEITOS NEON PARA OS CARDS DE LIVROS (Adicione no final do arquivo)
+   ========================================================================== */
+
+/* Livro 1 - Vermelho */
+.neon-vermelho {
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.25), 0 0 20px rgba(229, 9, 20, 0.1);
+}
+.neon-vermelho:hover {
+    box-shadow: 0 0 20px rgba(229, 9, 20, 0.7), 0 0 40px rgba(229, 9, 20, 0.35) !important;
+}
+
+/* Livro 2 - Azul */
+.neon-azul {
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.25), 0 0 20px rgba(0, 123, 255, 0.1);
+}
+.neon-azul:hover {
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.7), 0 0 40px rgba(0, 123, 255, 0.35) !important;
+}
+
+/* Livro 3 - Verde */
+.neon-verde {
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.25), 0 0 20px rgba(40, 167, 69, 0.1);
+}
+.neon-verde:hover {
+    box-shadow: 0 0 20px rgba(40, 167, 69, 0.7), 0 0 40px rgba(40, 167, 69, 0.35) !important;
+}
+
+/* Livro 4 - Amarelo */
+.neon-amarelo {
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.25), 0 0 20px rgba(250, 204, 21, 0.1);
+}
+.neon-amarelo:hover {
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.7), 0 0 40px rgba(250, 204, 21, 0.35) !important;
+}
+
+/* Livro 5 - Roxo */
+.neon-roxo {
+    box-shadow: 0 0 10px rgba(111, 66, 193, 0.25), 0 0 20px rgba(111, 66, 193, 0.1);
+}
+.neon-roxo:hover {
+    box-shadow: 0 0 20px rgba(111, 66, 193, 0.7), 0 0 40px rgba(111, 66, 193, 0.35) !important;
+}
+/* Livro 6 - Ciano */
+.neon-ciano { box-shadow: 0 0 10px rgba(6, 182, 212, 0.25); }
+.neon-ciano:hover { box-shadow: 0 0 25px rgba(6, 182, 212, 0.75) !important; }
+
+/* Livro 7 - Marrom */
+.neon-marrom { box-shadow: 0 0 10px rgba(139, 69, 19, 0.25); }
+.neon-marrom:hover { box-shadow: 0 0 25px rgba(139, 69, 19, 0.75) !important; }
+
+/* Livro 8 - Verde-Limão */
+.neon-verde-limao { box-shadow: 0 0 10px rgba(163, 230, 53, 0.3); }
+.neon-verde-limao:hover { box-shadow: 0 0 25px rgba(163, 230, 53, 0.8) !important; }
+
+/* Livro 9 - Laranja */
+.neon-laranja { box-shadow: 0 0 10px rgba(249, 115, 22, 0.25); }
+.neon-laranja:hover { box-shadow: 0 0 25px rgba(249, 115, 22, 0.75) !important; }
+
+/* Livro 10 - Preto */
+.neon-preto { box-shadow: 0 0 10px rgba(71, 85, 105, 0.25); }
+.neon-preto:hover { box-shadow: 0 0 25px rgba(148, 163, 184, 0.75) !important; }
+
+/* Livro 11 - Magenta */
+.neon-magenta { box-shadow: 0 0 10px rgba(217, 70, 239, 0.25); }
+.neon-magenta:hover { box-shadow: 0 0 25px rgba(217, 70, 239, 0.75) !important; }
+
+/* Livro 12 - Turquesa */
+.neon-turquesa { box-shadow: 0 0 10px rgba(20, 184, 166, 0.25); }
+.neon-turquesa:hover { box-shadow: 0 0 25px rgba(20, 184, 166, 0.75) !important; }
+
+/* Livro 13 - Gelo */
+.neon-gelo { box-shadow: 0 0 10px rgba(186, 230, 253, 0.35); }
+.neon-gelo:hover { box-shadow: 0 0 25px rgba(125, 211, 252, 0.85) !important; }
+
+/* Livro 14 - Oliva */
+.neon-oliva { box-shadow: 0 0 10px rgba(101, 163, 13, 0.25); }
+.neon-oliva:hover { box-shadow: 0 0 25px rgba(101, 163, 13, 0.75) !important; }
+
+/* Livro 15 - Índigo */
+.neon-indigo { box-shadow: 0 0 10px rgba(79, 70, 229, 0.25); }
+.neon-indigo:hover { box-shadow: 0 0 25px rgba(79, 70, 229, 0.75) !important; }
+
+/* Livro 16 - Ciano Vivo */
+.neon-ciano-vivo { box-shadow: 0 0 10px rgba(0, 229, 255, 0.25); }
+.neon-ciano-vivo:hover { box-shadow: 0 0 25px rgba(0, 229, 255, 0.75) !important; }
+
+/* Livro 17 - Violeta */
+.neon-violeta { box-shadow: 0 0 10px rgba(139, 92, 246, 0.25); }
+.neon-violeta:hover { box-shadow: 0 0 25px rgba(139, 92, 246, 0.75) !important; }
+
+/* Livro 18 - Rosa */
+.neon-rosa { box-shadow: 0 0 10px rgba(244, 114, 182, 0.25); }
+.neon-rosa:hover { box-shadow: 0 0 25px rgba(244, 114, 182, 0.75) !important; }
+
+/* Livro 19 - Coral */
+.neon-coral { box-shadow: 0 0 10px rgba(249, 115, 22, 0.25); }
+.neon-coral:hover { box-shadow: 0 0 25px rgba(248, 113, 113, 0.75) !important; }
+
+/* Livro 20 - Lilás */
+.neon-lilas { box-shadow: 0 0 10px rgba(192, 132, 252, 0.25); }
+.neon-lilas:hover { box-shadow: 0 0 25px rgba(192, 132, 252, 0.75) !important; }
