@@ -1,425 +1,254 @@
-// ======================================================
-// EFEITOS SONOROS MODERNOS (Web Audio API - Sem arquivos externos)
-// ======================================================
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+// ==========================================
+// MODO ESCURO (DARK MODE) - COMPATÍVEL COM AMBOS OS IDS
+// ==========================================
+const darkModeBtn = document.getElementById('darkModeBtn') || document.getElementById('btnModoDiario');
 
-function tocarSom(tipo) {
-    if (!audioCtx) return;
-    if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-    }
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    const agora = audioCtx.currentTime;
-
-    if (tipo === 'clique') {
-        osc.frequency.setValueAtTime(400, agora);
-        gain.gain.setValueAtTime(0.05, agora);
-        gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.08);
-        osc.start(agora);
-        osc.stop(agora + 0.08);
-    } else if (tipo === 'acerto') {
-        osc.frequency.setValueAtTime(587.33, agora); // D5
-        osc.frequency.setValueAtTime(880, agora + 0.1); // A5
-        gain.gain.setValueAtTime(0.1, agora);
-        gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.3);
-        osc.start(agora);
-        osc.stop(agora + 0.3);
-    } else if (tipo === 'erro') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(150, agora);
-        osc.frequency.setValueAtTime(100, agora + 0.15);
-        gain.gain.setValueAtTime(0.1, agora);
-        gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.3);
-        osc.start(agora);
-        osc.stop(agora + 0.3);
-    } else if (tipo === 'vitoria') {
-        [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.connect(g);
-            g.connect(audioCtx.destination);
-            o.frequency.setValueAtTime(freq, agora + (i * 0.1));
-            g.gain.setValueAtTime(0.1, agora + (i * 0.1));
-            g.gain.exponentialRampToValueAtTime(0.001, agora + (i * 0.1) + 0.25);
-            o.start(agora + (i * 0.1));
-            o.stop(agora + (i * 0.1) + 0.25);
-        });
-    }
-}
-
-// ======================================================
-// SISTEMA DE CONQUISTAS (LocalStorage)
-// ======================================================
-let livrosJogadosSet = JSON.parse(localStorage.getItem('livrosJogadosSet')) || [];
-let conquistas = JSON.parse(localStorage.getItem('conquistasDiario')) || {
-    especialista: false,
-    voraz: false,
-    podre: false
-};
-
-function atualizarbadgesUI() {
-    const badgeEspecialista = document.getElementById('badgeEspecialista');
-    const badgeVoraz = document.getElementById('badgeVoraz');
-    const badgePodre = document.getElementById('badgePodre');
-
-    if (badgeEspecialista && conquistas.especialista) badgeEspecialista.classList.add('desbloqueada');
-    if (badgeVoraz && conquistas.voraz) badgeVoraz.classList.add('desbloqueada');
-    if (badgePodre && conquistas.podre) badgePodre.classList.add('desbloqueada');
-}
-atualizarbadgesUI();
-
-function verificarConquistas(pontosObtidos, totalPerguntas, livroId) {
-    if (pontosObtidos === totalPerguntas) {
-        conquistas.especialista = true;
-    }
-    if (pontosObtidos === 0) {
-        conquistas.podre = true;
-    }
-    if (!livrosJogadosSet.includes(livroId)) {
-        livrosJogadosSet.push(livroId);
-        localStorage.setItem('livrosJogadosSet', JSON.stringify(livrosJogadosSet));
-    }
-    if (livrosJogadosSet.length >= 3) {
-        conquistas.voraz = true;
-    }
-    localStorage.setItem('conquistasDiario', JSON.stringify(conquistas));
-    atualizarbadgesUI();
-}
-
-// ======================================================
-// MODO RABISCO (ESTILO DIÁRIO) TOGGLE
-// ======================================================
-const btnRabisco = document.getElementById("btnRabisco");
-if (btnRabisco) {
-    btnRabisco.addEventListener("click", () => {
-        tocarSom('clique');
-        document.body.classList.toggle("modo-rabisco");
-        if(document.body.classList.contains("modo-rabisco")) {
-            btnRabisco.textContent = "💻 Modo Normal";
-        } else {
-            btnRabisco.textContent = "✏️ Modo Diário";
-        }
-    });
-}
-
-// ======================================================
-// LIVRO SURPRESA (SORTEIO ALEATÓRIO)
-// ======================================================
-const btnSorteio = document.getElementById("btnSorteio");
-const listaLivros = document.querySelectorAll(".livro");
-
-if (btnSorteio && listaLivros.length > 0) {
-    btnSorteio.addEventListener("click", (e) => {
-        e.preventDefault();
-        tocarSom('clique');
-        const randomIndex = Math.floor(Math.random() * listaLivros.length);
-        const livroSorteado = listaLivros[randomIndex];
-
-        listaLivros.forEach(l => l.classList.remove("destaque-sorteio"));
-
-        livroSorteado.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        livroSorteado.classList.add("destaque-sorteio");
-
-        setTimeout(() => {
-            livroSorteado.classList.remove("destaque-sorteio");
-        }, 3500);
-    });
-}
-
-// ======================================================
-// PESQUISA INTELIGENTE
-// ======================================================
-const campoPesquisa = document.getElementById("campoPesquisa");
-const botaoPesquisa = document.getElementById("botaoPesquisa");
-const nenhumResultado = document.getElementById("nenhumResultado");
-const quantidadeLivros = document.getElementById("quantidadeLivros");
-const textoResultado = document.getElementById("textoResultado");
-
-function pesquisarLivros() {
-    if (!campoPesquisa) return;
-    const texto = campoPesquisa.value.toLowerCase().trim();
-    let encontrados = 0;
-
-    listaLivros.forEach(function(livro) {
-        const titulo = livro.querySelector("h3").textContent.toLowerCase();
-        const numero = livro.querySelector(".numero").textContent.toLowerCase();
-        const autor = livro.querySelector(".autor").textContent.toLowerCase();
-        const informacoes = titulo + " " + numero + " " + autor;
-
-        if (informacoes.includes(texto)) {
-            livro.style.display = "";
-            encontrados++;
-        } else {
-            livro.style.display = "none";
-        }
-    });
-
-    if (quantidadeLivros) quantidadeLivros.textContent = encontrados + (encontrados === 1 ? " livro" : " livros");
-
-    if (encontrados === 0) {
-        if (nenhumResultado) nenhumResultado.style.display = "block";
-        if (textoResultado) textoResultado.textContent = "Nenhum livro corresponde à sua pesquisa.";
-    } else {
-        if (nenhumResultado) nenhumResultado.style.display = "none";
-        if (textoResultado) {
-            if (texto === "") {
-                textoResultado.textContent = "Todos os livros disponíveis.";
+if (darkModeBtn) {
+    // Aplica a preferência salva assim que a página carrega
+    window.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('tema') === 'escuro') {
+            document.body.classList.add('dark-mode');
+            if (darkModeBtn.id === 'darkModeBtn') {
+                darkModeBtn.textContent = '☀️';
             } else {
-                textoResultado.textContent = encontrados + (encontrados === 1 ? " livro encontrado." : " livros encontrados.");
+                darkModeBtn.textContent = '☀️ Modo Claro';
+            }
+        } else {
+            document.body.classList.remove('dark-mode');
+            if (darkModeBtn.id === 'darkModeBtn') {
+                darkModeBtn.textContent = '🌙';
+            } else {
+                darkModeBtn.textContent = '🌙 Modo Noturno';
             }
         }
-    }
-}
+    });
 
-if (campoPesquisa) {
-    campoPesquisa.addEventListener("input", pesquisarLivros);
-    botaoPesquisa.addEventListener("click", pesquisarLivros);
-    campoPesquisa.addEventListener("keydown", function(event) {
-        if (event.key === "Enter") { pesquisarLivros(); }
+    // Alterna o tema ao clicar no botão
+    darkModeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.body.classList.toggle('dark-mode');
+        
+        if (document.body.classList.contains('dark-mode')) {
+            localStorage.setItem('tema', 'escuro');
+            if (darkModeBtn.id === 'darkModeBtn') {
+                darkModeBtn.textContent = '☀️';
+            } else {
+                darkModeBtn.textContent = '☀️ Modo Claro';
+            }
+        } else {
+            localStorage.setItem('tema', 'claro');
+            if (darkModeBtn.id === 'darkModeBtn') {
+                darkModeBtn.textContent = '🌙';
+            } else {
+                darkModeBtn.textContent = '🌙 Modo Noturno';
+            }
+        }
     });
 }
 
-// ======================================================
-// QUIZ E BANCO DE DADOS DE PERGUNTAS
-// ======================================================
-const quizOverlay = document.getElementById("quizOverlay");
-const fecharQuiz = document.getElementById("fecharQuiz");
-const quizLivro = document.getElementById("quizLivro");
-const quizTitulo = document.getElementById("quizTitulo");
-const contadorPergunta = document.getElementById("contadorPergunta");
-const pergunta = document.getElementById("pergunta");
-const alternativas = document.getElementById("alternativas");
-const proximaPergunta = document.getElementById("proximaPergunta");
-const progressoBarra = document.getElementById("progressoBarra");
-const quizConteudo = document.getElementById("quizConteudo");
-const resultado = document.getElementById("resultado");
-const pontuacao = document.getElementById("pontuacao");
-const mensagemFinal = document.getElementById("mensagemFinal");
-const refazerQuiz = document.getElementById("refazerQuiz");
 
-let livroAtual = 1;
-let perguntaAtual = 0;
-let pontos = 0;
-let respostaSelecionada = false;
-
+// ==========================================
+// BANCO DE PERGUNTAS PARA OS LIVROS (QUIZ)
+// ==========================================
 const quizzes = {
     1: [
-        { pergunta: "Quem é o protagonista da série?", alternativas: ["Greg Heffley", "Rowley Jefferson", "Manny Heffley", "Rodrick Heffley"], correta: 0 },
-        { pergunta: "Quem é o melhor amigo de Greg?", alternativas: ["Fregley", "Rowley Jefferson", "Chirag Gupta", "Frank Heffley"], correta: 1 },
-        { pergunta: "Qual é o nome do irmão mais velho de Greg?", alternativas: ["Manny", "Rodrick", "Rowley", "Frank"], correta: 1 },
-        { pergunta: "Quem é o irmão mais novo de Greg?", alternativas: ["Rodrick", "Fregley", "Manny", "Frank"], correta: 2 },
-        { pergunta: "Quem criou a série Diário de um Banana?", alternativas: ["Jeff Kinney", "J. K. Rowling", "Stan Lee", "Rick Riordan"], correta: 0 }
+        { pergunta: "Qual é o nome do melhor amigo do Greg?", alternativas: ["Rodrick", "Rowley Jefferson", "Manny", "Fregley"], correta: 1 },
+        { pergunta: "Qual objeto na escola assusta as crianças?", alternativas: ["O queijo mofado", "O armário", "A bola", "O sino"], correta: 0 },
+        { pergunta: "Como se chama o irmão mais velho?", alternativas: ["Manny", "Rodrick", "Frank", "Rowley"], correta: 1 },
+        { pergunta: "O que o Greg escreve na capa?", alternativas: ["Diário", "Agenda", "Caderno", "Notas"], correta: 0 },
+        { pergunta: "Qual o nome do irmão mais novo?", alternativas: ["Manny", "Rodrick", "Bryce", "Chirag"], correta: 0 }
     ],
     2: [
-        { pergunta: "Qual é o sobrenome de Greg?", alternativas: ["Jefferson", "Heffley", "Gupta", "Hills"], correta: 1 },
-        { pergunta: "Qual personagem é conhecido por ser o melhor amigo de Greg?", alternativas: ["Rodrick", "Manny", "Rowley", "Fregley"], correta: 2 },
-        { pergunta: "Quem é o irmão que toca em uma banda?", alternativas: ["Manny", "Greg", "Rodrick", "Rowley"], correta: 2 },
-        { pergunta: "Qual é o nome da mãe de Greg?", alternativas: ["Susan", "Patty", "Holly", "Heather"], correta: 0 },
-        { pergunta: "Qual é o nome do pai de Greg?", alternativas: ["Frank", "Robert", "John", "Bill"], correta: 0 }
-    ],
-    3: [
-        { pergunta: "Greg Heffley é o personagem principal?", alternativas: ["Sim", "Não", "Somente no filme", "Somente no primeiro livro"], correta: 0 },
-        { pergunta: "Quem é o amigo mais próximo de Greg?", alternativas: ["Rodrick", "Rowley", "Manny", "Fregley"], correta: 1 },
-        { pergunta: "Qual personagem é o irmão mais velho de Greg?", alternativas: ["Manny", "Frank", "Rodrick", "Rowley"], correta: 2 },
-        { pergunta: "Qual personagem é o irmão mais novo?", alternativas: ["Manny", "Rodrick", "Rowley", "Fregley"], correta: 0 },
-        { pergunta: "Quem escreveu Diário de um Banana?", alternativas: ["Jeff Kinney", "Dav Pilkey", "R. L. Stine", "Rick Riordan"], correta: 0 }
-    ],
-    4: [
-        { pergunta: "Qual é o nome completo do protagonista?", alternativas: ["Greg Heffley", "Rowley Jefferson", "Rodrick Heffley", "Manny Heffley"], correta: 0 },
-        { pergunta: "Qual personagem é amigo de Greg?", alternativas: ["Rowley", "Frank", "Susan", "Rodrick"], correta: 0 },
-        { pergunta: "Qual é o nome do irmão mais velho?", alternativas: ["Manny", "Rodrick", "Rowley", "Fregley"], correta: 1 },
-        { pergunta: "Qual é o nome da mãe de Greg?", alternativas: ["Susan", "Holly", "Patty", "Linda"], correta: 0 },
-        { pergunta: "Qual é o nome do pai de Greg?", alternativas: ["Frank", "Robert", "Jeff", "Gary"], correta: 0 }
-    ],
-    5: [
-        { pergunta: "Quem é o protagonista da série?", alternativas: ["Greg Heffley", "Rowley Jefferson", "Rodrick Heffley", "Manny Heffley"], correta: 0 },
-        { pergunta: "Quem é o melhor amigo de Greg?", alternativas: ["Manny", "Rowley", "Rodrick", "Fregley"], correta: 1 },
-        { pergunta: "Qual é o nome do irmão mais velho?", alternativas: ["Manny", "Rodrick", "Frank", "Rowley"], correta: 1 },
-        { pergunta: "Qual é o nome da família de Greg?", alternativas: ["Jefferson", "Heffley", "Gupta", "Hills"], correta: 1 },
-        { pergunta: "Quem é o autor da série?", alternativas: ["Jeff Kinney", "Dav Pilkey", "Stephen King", "Rick Riordan"], correta: 0 }
+        { pergunta: "Qual o grande segredo do Rodrick?", alternativas: ["Ele toca numa banda", "Nota vermelha", "Faz balé", "Tem diário"], correta: 0 },
+        { pergunta: "Como se chama a banda dele?", alternativas: ["Os Fraldas Cheias", "The Rockers", "Banana Band", "G Inc"], correta: 0 },
+        { pergunta: "Onde o Rodrick tranca o Greg?", alternativas: ["No porão", "No banheiro", "No provador", "No armário"], correta: 0 },
+        { pergunta: "Quem chantageia o Greg?", alternativas: ["O próprio Rodrick", "Rowley", "Mãe", "Diretor"], correta: 0 },
+        { pergunta: "Qual o pet da família?", alternativas: ["Não têm", "Porquinho", "Cachorro Sweetie", "Gato"], correta: 2 }
     ]
 };
 
-const quizBase = [
-    { pergunta: "Quem é o protagonista da série?", alternativas: ["Greg Heffley", "Rowley Jefferson", "Rodrick Heffley", "Manny Heffley"], correta: 0 },
-    { pergunta: "Quem é o melhor amigo de Greg?", alternativas: ["Rodrick", "Rowley Jefferson", "Manny", "Fregley"], correta: 1 },
-    { pergunta: "Qual é o nome do irmão mais velho de Greg?", alternativas: ["Manny", "Frank", "Rodrick", "Rowley"], correta: 2 },
-    { pergunta: "Qual é o nome do irmão mais novo de Greg?", alternativas: ["Manny", "Rodrick", "Rowley", "Fregley"], correta: 0 },
-    { pergunta: "Quem criou Diário de um Banana?", alternativas: ["Jeff Kinney", "Dav Pilkey", "Rick Riordan", "Stan Lee"], correta: 0 }
-];
+let livroAtual = 1;
+let perguntaAtual = 0;
+let pontuacaoAtual = 0;
+let respostaSelecionada = null;
 
-for (let i = 6; i <= 18; i++) {
-    quizzes[i] = quizBase.map(function(item) {
-        return {
-            pergunta: item.pergunta,
-            alternativas: [...item.alternativas],
-            correta: item.correta
-        };
-    });
-}
+const quizOverlay = document.getElementById('quizOverlay');
+const fecharQuiz = document.getElementById('fecharQuiz');
+const quizLivroTag = document.getElementById('quizLivroTag');
+const contadorPergunta = document.getElementById('contadorPergunta');
+const progressoBarra = document.getElementById('progressoBarra');
+const perguntaTexto = document.getElementById('perguntaTexto');
+const alternativasContainer = document.getElementById('alternativasContainer');
+const proximaPerguntaBtn = document.getElementById('proximaPerguntaBtn');
+const quizConteudo = document.getElementById('quizConteudo');
+const resultadoContainer = document.getElementById('resultadoContainer');
+const pontuacaoTexto = document.getElementById('pontuacaoTexto');
+const mensagemFinalTexto = document.getElementById('mensagemFinalTexto');
+const refazerQuizBtn = document.getElementById('refazerQuizBtn');
 
-document.querySelectorAll(".quiz-botao").forEach(function(botao) {
-    botao.addEventListener("click", function() {
-        tocarSom('clique');
-        livroAtual = Number(botao.dataset.livro);
-        iniciarQuiz();
+// ABRIR QUIZ
+document.querySelectorAll('.quiz-botao').forEach(botao => {
+    botao.addEventListener('click', (e) => {
+        livroAtual = e.target.getAttribute('data-livro');
+        perguntaAtual = 0;
+        pontuacaoAtual = 0;
+        respostaSelecionada = null;
+        
+        if(quizLivroTag) quizLivroTag.textContent = `Livro ${livroAtual}`;
+        if(quizConteudo) quizConteudo.style.display = 'block';
+        if(resultadoContainer) resultadoContainer.style.display = 'none';
+        if(quizOverlay) quizOverlay.classList.add('ativo');
+        
+        carregarPergunta();
     });
 });
 
-function iniciarQuiz() {
-    if (!quizOverlay) return;
-    perguntaAtual = 0;
-    pontos = 0;
-    respostaSelecionada = false;
-    quizOverlay.classList.add("ativo");
-    document.body.style.overflow = "hidden";
-    if (quizConteudo) quizConteudo.classList.remove("esconder");
-    if (resultado) resultado.classList.remove("ativo");
-    if (quizLivro) quizLivro.textContent = "Livro " + livroAtual;
-    if (quizTitulo) quizTitulo.textContent = "🧠 Quiz - Diário de um Banana " + livroAtual;
-    mostrarPergunta();
+if(fecharQuiz) {
+    fecharQuiz.addEventListener('click', () => quizOverlay.classList.remove('ativo'));
 }
 
-function mostrarPergunta() {
-    const perguntasDoLivro = quizzes[livroAtual];
-    const dados = perguntasDoLivro[perguntaAtual];
-    respostaSelecionada = false;
-    if (proximaPergunta) proximaPergunta.disabled = true;
-
-    if (contadorPergunta) contadorPergunta.textContent = "Pergunta " + (perguntaAtual + 1) + " de " + perguntasDoLivro.length;
-    if (progressoBarra) progressoBarra.style.width = (((perguntaAtual + 1) / perguntasDoLivro.length) * 100) + "%";
-    if (pergunta) pergunta.textContent = dados.pergunta;
-    if (alternativas) alternativas.innerHTML = "";
-
-    dados.alternativas.forEach(function(opcao, indice) {
-        const botao = document.createElement("button");
-        botao.className = "alternativa";
-        botao.textContent = opcao;
-        botao.addEventListener("click", function() {
-            tocarSom('clique');
-            selecionarResposta(indice, botao);
+function carregarPergunta() {
+    respostaSelecionada = null;
+    if(proximaPerguntaBtn) proximaPerguntaBtn.disabled = true;
+    
+    const dados = quizzes[livroAtual] || quizzes[1];
+    const questao = dados[perguntaAtual];
+    
+    if(contadorPergunta) contadorPergunta.textContent = `Pergunta ${perguntaAtual + 1} de ${dados.length}`;
+    if(progressoBarra) progressoBarra.style.width = `${((perguntaAtual + 1) / dados.length) * 100}%`;
+    if(perguntaTexto) perguntaTexto.textContent = questao.pergunta;
+    
+    if(alternativasContainer) {
+        alternativasContainer.innerHTML = '';
+        questao.alternativas.forEach((alt, index) => {
+            const btn = document.createElement('button');
+            btn.classList.add('btn-alternativa');
+            btn.textContent = alt;
+            btn.addEventListener('click', () => selecionarAlt(index, questao.correta, btn));
+            alternativasContainer.appendChild(btn);
         });
-        if (alternativas) alternativas.appendChild(botao);
+    }
+}
+
+function selecionarAlt(indexSel, indexCorreto, btnEl) {
+    if (respostaSelecionada !== null) return;
+    respostaSelecionada = indexSel;
+    
+    const botoes = alternativasContainer.querySelectorAll('.btn-alternativa');
+    botoes.forEach((b, i) => {
+        b.disabled = true;
+        if (i === indexCorreto) b.classList.add('correta');
+        else if (i === indexSel) b.classList.add('errada');
     });
 
-    if (proximaPergunta) {
-        if (perguntaAtual === perguntasDoLivro.length - 1) {
-            proximaPergunta.textContent = "Finalizar quiz ✓";
-        } else {
-            proximaPergunta.textContent = "Próxima pergunta →";
-        }
-    }
+    if (indexSel === indexCorreto) pontuacaoAtual++;
+    if(proximaPerguntaBtn) proximaPerguntaBtn.disabled = false;
 }
 
-function selecionarResposta(indiceEscolhido, botaoEscolhido) {
-    if (respostaSelecionada) { return; }
-    respostaSelecionada = true;
-
-    const dados = quizzes[livroAtual][perguntaAtual];
-    const botoes = document.querySelectorAll(".alternativa");
-
-    botoes.forEach(function(botao) { botao.disabled = true; });
-
-    if (indiceEscolhido === dados.correta) {
-        pontos++;
-        tocarSom('acerto');
-        botaoEscolhido.classList.add("correta");
-    } else {
-        tocarSom('erro');
-        botaoEscolhido.classList.add("errada");
-        botoes[dados.correta].classList.add("correta");
-    }
-    if (proximaPergunta) proximaPergunta.disabled = false;
-}
-
-if (proximaPergunta) {
-    proximaPergunta.addEventListener("click", function() {
-        if (!respostaSelecionada) { return; }
-        tocarSom('clique');
-        const total = quizzes[livroAtual].length;
-
-        if (perguntaAtual < total - 1) {
-            perguntaAtual++;
-            mostrarPergunta();
+if(proximaPerguntaBtn) {
+    proximaPerguntaBtn.addEventListener('click', () => {
+        const dados = quizzes[livroAtual] || quizzes[1];
+        perguntaAtual++;
+        if (perguntaAtual < dados.length) {
+            carregarPergunta();
         } else {
-            mostrarResultado();
+            if(quizConteudo) quizConteudo.style.display = 'none';
+            if(resultadoContainer) resultadoContainer.style.display = 'block';
+            if(pontuacaoTexto) pontuacaoTexto.textContent = `${pontuacaoAtual} de ${dados.length} corretas`;
+            if(mensagemFinalTexto) {
+                mensagemFinalTexto.textContent = pontuacaoAtual === dados.length ? 
+                    "Excelente! Você é um verdadeiro fã da leitura!" : 
+                    "Bom trabalho! Continue lendo para acertar tudo!";
+            }
         }
     });
 }
 
-function mostrarResultado() {
-    if (quizConteudo) quizConteudo.classList.add("esconder");
-    if (resultado) resultado.classList.add("ativo");
-    const total = quizzes[livroAtual].length;
-
-    if (pontuacao) pontuacao.textContent = pontos + " de " + total + " respostas corretas";
-    verificarConquistas(pontos, total, livroAtual);
-
-    if (mensagemFinal) {
-        if (pontos === total) {
-            tocarSom('vitoria');
-            mensagemFinal.textContent = "🏆 Perfeito! Você acertou todas!";
-        } else if (pontos >= 4) {
-            tocarSom('acerto');
-            mensagemFinal.textContent = "🔥 Muito bem! Você conhece bastante a série!";
-        } else if (pontos >= 3) {
-            mensagemFinal.textContent = "👏 Bom trabalho! Você foi muito bem.";
-        } else if (pontos >= 2) {
-            mensagemFinal.textContent = "🙂 Você foi bem, mas pode tentar novamente.";
-        } else {
-            mensagemFinal.textContent = "🍌 Que tal tentar novamente e melhorar sua pontuação?";
-        }
-    }
-}
-
-if (refazerQuiz) {
-    refazerQuiz.addEventListener("click", function() {
-        tocarSom('clique');
-        iniciarQuiz();
+if(refazerQuizBtn) {
+    refazerQuizBtn.addEventListener('click', () => {
+        perguntaAtual = 0;
+        pontuacaoAtual = 0;
+        if(quizConteudo) quizConteudo.style.display = 'block';
+        if(resultadoContainer) resultadoContainer.style.display = 'none';
+        carregarPergunta();
     });
 }
 
-function fecharModalQuiz() {
-    tocarSom('clique');
-    if (quizOverlay) quizOverlay.classList.remove("ativo");
-    document.body.style.overflow = "";
-}
 
-if (fecharQuiz) fecharQuiz.addEventListener("click", fecharModalQuiz);
-if (quizOverlay) {
-    quizOverlay.addEventListener("click", function(event) {
-        if (event.target === quizOverlay) { fecharModalQuiz(); }
+// ==========================================
+// FILTRO POR CATEGORIAS DA SIDEBAR
+// ==========================================
+const catBtns = document.querySelectorAll('.cat-btn');
+const livrosCards = document.querySelectorAll('.livro-card');
+const contadorLivros = document.getElementById('contadorLivros');
+
+catBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        catBtns.forEach(b => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+        
+        const categoria = btn.getAttribute('data-categoria');
+        let visiveis = 0;
+        
+        livrosCards.forEach(card => {
+            const catCard = card.getAttribute('data-cat');
+            if (categoria === 'todos' || catCard === categoria) {
+                card.style.display = 'flex';
+                visiveis++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        if(contadorLivros) contadorLivros.textContent = `${visiveis} livros encontrados`;
     });
-}
-
-document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape" && quizOverlay && quizOverlay.classList.contains("ativo")) {
-        fecharModalQuiz();
-    }
 });
 
-// ======================================================
-// SISTEMA DE CADASTRO DE USUÁRIOS (Novo!)
-// ======================================================
-const formCadastro = document.getElementById("formCadastro");
-if (formCadastro) {
-    formCadastro.addEventListener("submit", function(e) {
+
+// ==========================================
+// PESQUISA INTELIGENTE
+// ==========================================
+const campoPesquisa = document.getElementById('campoPesquisa');
+const botaoPesquisa = document.getElementById('botaoPesquisa');
+const nenhumResultado = document.getElementById('nenhumResultado');
+
+function executarPesquisa() {
+    if (!campoPesquisa) return;
+    const termo = campoPesquisa.value.toLowerCase().trim();
+    let visiveis = 0;
+
+    livrosCards.forEach(card => {
+        const titulo = card.querySelector('h3').textContent.toLowerCase();
+        const autor = card.querySelector('.autor').textContent.toLowerCase();
+        const num = card.querySelector('.num-livro').textContent.toLowerCase();
+
+        if (titulo.includes(termo) || autor.includes(termo) || num.includes(termo)) {
+            card.style.display = 'flex';
+            visiveis++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    if(nenhumResultado) nenhumResultado.style.display = visiveis === 0 ? 'block' : 'none';
+    if(contadorLivros) contadorLivros.textContent = `${visiveis} livros encontrados`;
+}
+
+if(campoPesquisa) campoPesquisa.addEventListener('input', executarPesquisa);
+if(botaoPesquisa) botaoPesquisa.addEventListener('click', executarPesquisa);
+
+
+// ==========================================
+// LIVRO SURPRESA
+// ==========================================
+const btnSorteio = document.getElementById('btnSorteio');
+if(btnSorteio) {
+    btnSorteio.addEventListener('click', (e) => {
         e.preventDefault();
-        tocarSom('clique');
-
-        const nome = document.getElementById("nome").value;
-        const email = document.getElementById("email").value;
-        const senha = document.getElementById("senha").value;
-
-        // Salva os dados do usuário no localStorage
-        const novoUsuario = { nome, email, senha, data: new Date().toLocaleDateString() };
-        localStorage.setItem("usuarioLogadoDiario", JSON.stringify(novoUsuario));
-
-        alert(`Parabéns, ${nome}! Sua conta na Livraria Diário de um Banana foi criada com sucesso! 🍌`);
-        window.location.href = "index.html";
+        const visiveis = Array.from(livrosCards).filter(c => c.style.display !== 'none');
+        if (visiveis.length === 0) return;
+        const sorteado = visiveis[Math.floor(Math.random() * visiveis.length)];
+        sorteado.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        sorteado.style.border = '2px solid #2563eb';
+        setTimeout(() => sorteado.style.border = '1px solid #e2e8f0', 2500);
     });
 }
