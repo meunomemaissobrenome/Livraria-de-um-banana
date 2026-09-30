@@ -13,14 +13,6 @@ body {
     flex-direction: column;
 }
 
-/* MODO DIÁRIO (RABISCO) */
-body.modo-diario {
-    font-family: 'Patrick Hand', cursive !important;
-    background-color: #fef9c3 !important;
-}
-body.modo-diario h2, body.modo-diario h3, body.modo-diario .logo {
-    font-family: 'Caveat', cursive !important;
-}
 
 /* HEADER ESTILO BIBLIOTECA */
 .site-header {
