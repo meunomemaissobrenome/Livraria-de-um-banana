@@ -1,254 +1,1284 @@
-// ==========================================
-// MODO ESCURO (DARK MODE) - COMPATÍVEL COM AMBOS OS IDS
-// ==========================================
-const darkModeBtn = document.getElementById('darkModeBtn') || document.getElementById('btnModoDiario');
-
-if (darkModeBtn) {
-    // Aplica a preferência salva assim que a página carrega
-    window.addEventListener('DOMContentLoaded', () => {
-        if (localStorage.getItem('tema') === 'escuro') {
-            document.body.classList.add('dark-mode');
-            if (darkModeBtn.id === 'darkModeBtn') {
-                darkModeBtn.textContent = '☀️';
-            } else {
-                darkModeBtn.textContent = '☀️ Modo Claro';
-            }
-        } else {
-            document.body.classList.remove('dark-mode');
-            if (darkModeBtn.id === 'darkModeBtn') {
-                darkModeBtn.textContent = '🌙';
-            } else {
-                darkModeBtn.textContent = '🌙 Modo Noturno';
-            }
-        }
-    });
-
-    // Alterna o tema ao clicar no botão
-    darkModeBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        document.body.classList.toggle('dark-mode');
-        
-        if (document.body.classList.contains('dark-mode')) {
-            localStorage.setItem('tema', 'escuro');
-            if (darkModeBtn.id === 'darkModeBtn') {
-                darkModeBtn.textContent = '☀️';
-            } else {
-                darkModeBtn.textContent = '☀️ Modo Claro';
-            }
-        } else {
-            localStorage.setItem('tema', 'claro');
-            if (darkModeBtn.id === 'darkModeBtn') {
-                darkModeBtn.textContent = '🌙';
-            } else {
-                darkModeBtn.textContent = '🌙 Modo Noturno';
-            }
-        }
-    });
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-
-// ==========================================
-// BANCO DE PERGUNTAS PARA OS LIVROS (QUIZ)
-// ==========================================
-const quizzes = {
-    1: [
-        { pergunta: "Qual é o nome do melhor amigo do Greg?", alternativas: ["Rodrick", "Rowley Jefferson", "Manny", "Fregley"], correta: 1 },
-        { pergunta: "Qual objeto na escola assusta as crianças?", alternativas: ["O queijo mofado", "O armário", "A bola", "O sino"], correta: 0 },
-        { pergunta: "Como se chama o irmão mais velho?", alternativas: ["Manny", "Rodrick", "Frank", "Rowley"], correta: 1 },
-        { pergunta: "O que o Greg escreve na capa?", alternativas: ["Diário", "Agenda", "Caderno", "Notas"], correta: 0 },
-        { pergunta: "Qual o nome do irmão mais novo?", alternativas: ["Manny", "Rodrick", "Bryce", "Chirag"], correta: 0 }
-    ],
-    2: [
-        { pergunta: "Qual o grande segredo do Rodrick?", alternativas: ["Ele toca numa banda", "Nota vermelha", "Faz balé", "Tem diário"], correta: 0 },
-        { pergunta: "Como se chama a banda dele?", alternativas: ["Os Fraldas Cheias", "The Rockers", "Banana Band", "G Inc"], correta: 0 },
-        { pergunta: "Onde o Rodrick tranca o Greg?", alternativas: ["No porão", "No banheiro", "No provador", "No armário"], correta: 0 },
-        { pergunta: "Quem chantageia o Greg?", alternativas: ["O próprio Rodrick", "Rowley", "Mãe", "Diretor"], correta: 0 },
-        { pergunta: "Qual o pet da família?", alternativas: ["Não têm", "Porquinho", "Cachorro Sweetie", "Gato"], correta: 2 }
-    ]
-};
-
-let livroAtual = 1;
-let perguntaAtual = 0;
-let pontuacaoAtual = 0;
-let respostaSelecionada = null;
-
-const quizOverlay = document.getElementById('quizOverlay');
-const fecharQuiz = document.getElementById('fecharQuiz');
-const quizLivroTag = document.getElementById('quizLivroTag');
-const contadorPergunta = document.getElementById('contadorPergunta');
-const progressoBarra = document.getElementById('progressoBarra');
-const perguntaTexto = document.getElementById('perguntaTexto');
-const alternativasContainer = document.getElementById('alternativasContainer');
-const proximaPerguntaBtn = document.getElementById('proximaPerguntaBtn');
-const quizConteudo = document.getElementById('quizConteudo');
-const resultadoContainer = document.getElementById('resultadoContainer');
-const pontuacaoTexto = document.getElementById('pontuacaoTexto');
-const mensagemFinalTexto = document.getElementById('mensagemFinalTexto');
-const refazerQuizBtn = document.getElementById('refazerQuizBtn');
-
-// ABRIR QUIZ
-document.querySelectorAll('.quiz-botao').forEach(botao => {
-    botao.addEventListener('click', (e) => {
-        livroAtual = e.target.getAttribute('data-livro');
-        perguntaAtual = 0;
-        pontuacaoAtual = 0;
-        respostaSelecionada = null;
-        
-        if(quizLivroTag) quizLivroTag.textContent = `Livro ${livroAtual}`;
-        if(quizConteudo) quizConteudo.style.display = 'block';
-        if(resultadoContainer) resultadoContainer.style.display = 'none';
-        if(quizOverlay) quizOverlay.classList.add('ativo');
-        
-        carregarPergunta();
-    });
-});
-
-if(fecharQuiz) {
-    fecharQuiz.addEventListener('click', () => quizOverlay.classList.remove('ativo'));
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f6f9;
+    color: #334155;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-function carregarPergunta() {
-    respostaSelecionada = null;
-    if(proximaPerguntaBtn) proximaPerguntaBtn.disabled = true;
-    
-    const dados = quizzes[livroAtual] || quizzes[1];
-    const questao = dados[perguntaAtual];
-    
-    if(contadorPergunta) contadorPergunta.textContent = `Pergunta ${perguntaAtual + 1} de ${dados.length}`;
-    if(progressoBarra) progressoBarra.style.width = `${((perguntaAtual + 1) / dados.length) * 100}%`;
-    if(perguntaTexto) perguntaTexto.textContent = questao.pergunta;
-    
-    if(alternativasContainer) {
-        alternativasContainer.innerHTML = '';
-        questao.alternativas.forEach((alt, index) => {
-            const btn = document.createElement('button');
-            btn.classList.add('btn-alternativa');
-            btn.textContent = alt;
-            btn.addEventListener('click', () => selecionarAlt(index, questao.correta, btn));
-            alternativasContainer.appendChild(btn);
-        });
+/* MODO DIÁRIO (RABISCO) */
+body.modo-diario {
+    font-family: 'Patrick Hand', cursive !important;
+    background-color: #fef9c3 !important;
+}
+body.modo-diario h2, body.modo-diario h3, body.modo-diario .logo {
+    font-family: 'Caveat', cursive !important;
+}
+
+/* HEADER ESTILO BIBLIOTECA */
+.site-header {
+    background-color: #193261;
+    color: #fff;
+    padding: 15px 5%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    max-width: 1350px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #facc15;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.nav-links a {
+    color: #e2e8f0;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover, .nav-links a.ativo {
+    color: #facc15;
+}
+
+/* LAYOUT PRINCIPAL (GRID COM SIDEBAR) */
+.main-layout {
+    max-width: 1350px;
+    width: 92%;
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 30px;
+    flex: 1;
+}
+
+/* SIDEBAR ESQUERDA */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar-box {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.sidebar-box h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #1e293b;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 8px;
+}
+
+.categoria-lista {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cat-btn {
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #475569;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+
+.cat-btn:hover, .cat-btn.ativo {
+    background-color: #fef08a;
+    color: #713f12;
+    font-weight: 600;
+}
+
+.objetivo-box p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #64748b;
+}
+
+/* ÁREA DE CONTEÚDO */
+.content-area {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* BARRA DE PESQUISA */
+.barra-pesquisa-container {
+    display: flex;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.barra-pesquisa-container input {
+    flex: 1;
+    border: none;
+    padding: 14px 18px;
+    font-size: 15px;
+    outline: none;
+    background: transparent;
+}
+
+.barra-pesquisa-container button {
+    background: #facc15;
+    border: none;
+    padding: 0 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.barra-pesquisa-container button:hover {
+    background: #eab308;
+}
+
+.secao-titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.secao-titulo h2 {
+    font-size: 20px;
+    color: #1e293b;
+}
+
+#contadorLivros {
+    font-size: 13px;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+
+.nenhum-resultado {
+    background: #fff;
+    padding: 30px;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #64748b;
+}
+
+/* GRID DE LIVROS */
+.grid-livros {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 20px;
+}
+
+.livro-card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+
+.livro-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.tag-genero {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(74, 21, 27, 0.85);
+    color: white;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    z-index: 2;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.capa-livro {
+    width: 100%;
+    height: 270px;
+    background: #e2e8f0;
+    overflow: hidden;
+}
+
+.capa-livro img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.livro-card:hover .capa-livro img {
+    transform: scale(1.05);
+}
+
+.info-livro {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.num-livro {
+    font-size: 11px;
+    font-weight: 600;
+    color: #252668;
+}
+
+.info-livro h3 {
+    font-size: 16px;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
+.autor {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.avaliacao {
+    font-size: 13px;
+    color: #f59e0b;
+}
+
+.avaliacao span {
+    color: #64748b;
+    font-size: 11px;
+}
+
+.badge-gratuito {
+    font-size: 11px;
+    color: #16a34a;
+    font-weight: 600;
+}
+
+/* BOTÃO VER LIVRO */
+.btn-ver-livro {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #2563eb;
+    color: #ffffff !important;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-ver-livro:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.btn-ler {
+    margin-top: 8px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 9px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: center;
+}
+
+.btn-ler:hover {
+    background: #1d4ed8;
+}
+
+/* RODAPÉ */
+.site-footer {
+    background: #1e293b;
+    color: #94a3b8;
+    text-align: center;
+    padding: 20px;
+    font-size: 13px;
+    margin-top: 40px;
+}
+
+/* MODAL DE QUIZ */
+.quiz-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(3px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+.quiz-overlay.ativo {
+    display: flex;
+}
+
+.quiz-modal {
+    background: #fff;
+    width: 100%;
+    max-width: 550px;
+    border-radius: 12px;
+    padding: 30px;
+    position: relative;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+}
+
+.fechar-quiz {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    background: #f1f5f9;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.quiz-livro-tag {
+    display: inline-block;
+    background: #e0e7ff;
+    color: #3730a3;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.quiz-modal h2 {
+    font-size: 22px;
+    color: #1e293b;
+    margin-bottom: 15px;
+}
+
+.progresso-container {
+    width: 100%;
+    height: 6px;
+    background: #f1f5f9;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progresso-barra {
+    height: 100%;
+    width: 20%;
+    background: #2563eb;
+    transition: width 0.3s;
+}
+
+.contador-pergunta {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 15px;
+}
+
+.pergunta-texto {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 15px;
+}
+
+.alternativas-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.btn-alternativa {
+    width: 100%;
+    padding: 12px;
+    text-align: left;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-alternativa:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.btn-alternativa.correta {
+    background: #dcfce7;
+    border-color: #16a34a;
+    color: #166534;
+}
+
+.btn-alternativa.errada {
+    background: #fee2e2;
+    border-color: #dc2626;
+    color: #991b1b;
+}
+
+.btn-proxima {
+    width: 100%;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-proxima:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.resultado-container {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.trofeu-icone {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+#pontuacaoTexto {
+    font-size: 20px;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.mensagem-final {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* PÁGINA DE COMPRAS */
+.main-compras {
+    max-width: 1350px;
+    width: 92%;
+    margin: 30px auto;
+    flex: 1;
+}
+
+.hero-compras {
+    background: #4a151b;
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.hero-compras h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.hero-compras p {
+    font-size: 15px;
+    color: #e2e8f0;
+}
+
+.grid-compras {
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 20px;
+}
+
+.card-compra {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-compra:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.card-compra img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.card-compra h3 {
+    font-size: 15px;
+    color: #1e293b;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+.card-compra .autor {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.preco {
+    color: #16a34a !important;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.btn-amazon {
+    background: #f59e0b;
+    color: #1e293b;
+    text-decoration: none;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    transition: background 0.2s;
+}
+
+.btn-amazon:hover {
+    background: #d97706;
+    color: #fff;
+}
+
+/* --- MODO NOTURNO (DARK MODE) SEGURO --- */
+body.dark-mode {
+    background-color: #121212 !important;
+}
+
+body.dark-mode .site-header,
+body.dark-mode .sidebar-box,
+body.dark-mode .livro-card,
+body.dark-mode .card-compra,
+body.dark-mode .barra-pesquisa-container,
+body.dark-mode .barra-pesquisa-container input,
+body.dark-mode .secao-titulo,
+body.dark-mode .nenhum-resultado,
+body.dark-mode .quiz-modal {
+    background-color: #1e1e1e !important;
+    border-color: #334155 !important;
+}
+
+/* RESPONSIVO */
+@media(max-width: 900px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+    .sidebar {
+        display: none;
     }
 }
-
-function selecionarAlt(indexSel, indexCorreto, btnEl) {
-    if (respostaSelecionada !== null) return;
-    respostaSelecionada = indexSel;
-    
-    const botoes = alternativasContainer.querySelectorAll('.btn-alternativa');
-    botoes.forEach((b, i) => {
-        b.disabled = true;
-        if (i === indexCorreto) b.classList.add('correta');
-        else if (i === indexSel) b.classList.add('errada');
-    });
-
-    if (indexSel === indexCorreto) pontuacaoAtual++;
-    if(proximaPerguntaBtn) proximaPerguntaBtn.disabled = false;
+/* --- CORREÇÃO DEFINITIVA DE TEXTOS NO MODO ESCURO --- */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode a,
+body.dark-mode .info-livro h3,
+body.dark-mode .autor,
+body.dark-mode .sidebar-box p,
+body.dark-mode .cat-btn,
+body.dark-mode #contadorLivros,
+body.dark-mode .objetivo-box p {
+    color: #f8fafc !important;
 }
 
-if(proximaPerguntaBtn) {
-    proximaPerguntaBtn.addEventListener('click', () => {
-        const dados = quizzes[livroAtual] || quizzes[1];
-        perguntaAtual++;
-        if (perguntaAtual < dados.length) {
-            carregarPergunta();
-        } else {
-            if(quizConteudo) quizConteudo.style.display = 'none';
-            if(resultadoContainer) resultadoContainer.style.display = 'block';
-            if(pontuacaoTexto) pontuacaoTexto.textContent = `${pontuacaoAtual} de ${dados.length} corretas`;
-            if(mensagemFinalTexto) {
-                mensagemFinalTexto.textContent = pontuacaoAtual === dados.length ? 
-                    "Excelente! Você é um verdadeiro fã da leitura!" : 
-                    "Bom trabalho! Continue lendo para acertar tudo!";
-            }
-        }
-    });
+/* Mantém os preços e botões com suas cores de destaque legíveis */
+body.dark-mode .preco,
+body.dark-mode .badge-gratuito {
+    color: #4ade80 !important;
 }
 
-if(refazerQuizBtn) {
-    refazerQuizBtn.addEventListener('click', () => {
-        perguntaAtual = 0;
-        pontuacaoAtual = 0;
-        if(quizConteudo) quizConteudo.style.display = 'block';
-        if(resultadoContainer) resultadoContainer.style.display = 'none';
-        carregarPergunta();
-    });
+body.dark-mode .cat-btn:hover, 
+body.dark-mode .cat-btn.ativo {
+    color: #713f12 !important; /* Mantém o contraste nos botões selecionados da sidebar */
+}
+.grid-compras {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 20px;
+}
+/* --- MODO ESCURO PARA O COMPRAR.HTML --- */
+body.dark-mode .main-compras {
+    background-color: #0f172a;
 }
 
-
-// ==========================================
-// FILTRO POR CATEGORIAS DA SIDEBAR
-// ==========================================
-const catBtns = document.querySelectorAll('.cat-btn');
-const livrosCards = document.querySelectorAll('.livro-card');
-const contadorLivros = document.getElementById('contadorLivros');
-
-catBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        catBtns.forEach(b => b.classList.remove('ativo'));
-        btn.classList.add('ativo');
-        
-        const categoria = btn.getAttribute('data-categoria');
-        let visiveis = 0;
-        
-        livrosCards.forEach(card => {
-            const catCard = card.getAttribute('data-cat');
-            if (categoria === 'todos' || catCard === categoria) {
-                card.style.display = 'flex';
-                visiveis++;
-            } else {
-                card.style.display = 'none';
-            }
-        });
-        if(contadorLivros) contadorLivros.textContent = `${visiveis} livros encontrados`;
-    });
-});
-
-
-// ==========================================
-// PESQUISA INTELIGENTE
-// ==========================================
-const campoPesquisa = document.getElementById('campoPesquisa');
-const botaoPesquisa = document.getElementById('botaoPesquisa');
-const nenhumResultado = document.getElementById('nenhumResultado');
-
-function executarPesquisa() {
-    if (!campoPesquisa) return;
-    const termo = campoPesquisa.value.toLowerCase().trim();
-    let visiveis = 0;
-
-    livrosCards.forEach(card => {
-        const titulo = card.querySelector('h3').textContent.toLowerCase();
-        const autor = card.querySelector('.autor').textContent.toLowerCase();
-        const num = card.querySelector('.num-livro').textContent.toLowerCase();
-
-        if (titulo.includes(termo) || autor.includes(termo) || num.includes(termo)) {
-            card.style.display = 'flex';
-            visiveis++;
-        } else {
-            card.style.display = 'none';
-        }
-    });
-
-    if(nenhumResultado) nenhumResultado.style.display = visiveis === 0 ? 'block' : 'none';
-    if(contadorLivros) contadorLivros.textContent = `${visiveis} livros encontrados`;
+body.dark-mode .hero-compras {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border: 1px solid #334155;
 }
 
-if(campoPesquisa) campoPesquisa.addEventListener('input', executarPesquisa);
-if(botaoPesquisa) botaoPesquisa.addEventListener('click', executarPesquisa);
+body.dark-mode .card-compra {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #f8fafc !important;
+}
 
+body.dark-mode .card-compra h3,
+body.dark-mode .card-compra p,
+body.dark-mode .card-compra .autor {
+    color: #f8fafc !important;
+}
 
-// ==========================================
-// LIVRO SURPRESA
-// ==========================================
-const btnSorteio = document.getElementById('btnSorteio');
-if(btnSorteio) {
-    btnSorteio.addEventListener('click', (e) => {
-        e.preventDefault();
-        const visiveis = Array.from(livrosCards).filter(c => c.style.display !== 'none');
-        if (visiveis.length === 0) return;
-        const sorteado = visiveis[Math.floor(Math.random() * visiveis.length)];
-        sorteado.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        sorteado.style.border = '2px solid #2563eb';
-        setTimeout(() => sorteado.style.border = '1px solid #e2e8f0', 2500);
-    });
+body.dark-mode .card-compra .preco {
+    color: #4ade80 !important;
+}
+/* ==========================================
+   RESPONSIVIDADE PARA CELULARES E TABLETS (MEDIA QUERIES)
+   ========================================== */
+
+@media screen and (max-width: 768px) {
+    /* 1. Ajuste geral do corpo e container */
+    body {
+        overflow-x: hidden;
+    }
+
+    /* 2. Cabeçalho Responsivo (Empilha o logo e os links) */
+    .header-container, .site-header .header-container {
+        flex-direction: column !important;
+        align-items: center !important;
+        padding: 10px !important;
+        text-align: center;
+    }
+
+    .logo {
+        margin-bottom: 10px;
+        font-size: 22px;
+    }
+
+    .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 5px;
+    }
+
+    .nav-links a, .nav-links button {
+        font-size: 13px !important;
+        padding: 6px 10px !important;
+    }
+
+    /* 3. Layout principal: Transforma a barra lateral (sidebar) e conteúdo em coluna única */
+    .main-container, .conteudo-principal {
+        flex-direction: column !important;
+        padding: 10px !important;
+    }
+
+    /* Sidebar passa a ficar no topo ou em bloco normal */
+    .sidebar, aside {
+        width: 100% !important;
+        margin-bottom: 20px;
+    }
+
+    /* 4. Grade de Livros adaptada para 1 ou 2 colunas no celular */
+    .grid-livros, .grid-compras {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+        gap: 15px !important;
+        padding: 0 5px !important;
+    }
+
+    .livro-card, .card-compra {
+        width: 100% !important;
+        margin: 0 auto;
+    }
+
+    /* 5. Barra de Pesquisa */
+    .barra-pesquisa, .pesquisa-container {
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+
+    #campoPesquisa {
+        width: 100% !important;
+        margin-bottom: 8px;
+    }
+
+    #botaoPesquisa {
+        width: 100% !important;
+    }
+}/* ==========================================
+   FORÇAR EXIBIÇÃO DA BIBLIOTECA VIRTUAL NO CELULAR
+   ========================================== */
+@media screen and (max-width: 768px) {
+    /* Garante que o menu lateral apareça e não fique oculto */
+    .sidebar, 
+    aside, 
+    .menu-lateral {
+        display: block !important;
+        width: 100% !important;
+        background-color: #ffffff;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Modo escuro para a sidebar no celular */
+    body.dark-mode .sidebar, 
+    body.dark-mode aside, 
+    body.dark-mode .menu-lateral {
+        background-color: #1e293b !important;
+        color: #f8fafc !important;
+        border: 1px solid #334155;
+    }
+
+    /* Organiza os botões de categoria lado a lado ou em bloco legível no celular */
+    .sidebar .cat-btn, 
+    aside button {
+        width: 100%;
+        text-align: left;
+        margin-bottom: 5px;
+    }
+}
+/* ==========================================================================
+   EFEITOS NEON PARA OS CARDS DE LIVROS (Adicione no final do arquivo)
+   ========================================================================== */
+
+/* Livro 1 - Vermelho */
+.neon-vermelho {
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.25), 0 0 20px rgba(229, 9, 20, 0.1);
+}
+.neon-vermelho:hover {
+    box-shadow: 0 0 20px rgba(229, 9, 20, 0.7), 0 0 40px rgba(229, 9, 20, 0.35) !important;
+}
+
+/* Livro 2 - Azul */
+.neon-azul {
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.25), 0 0 20px rgba(0, 123, 255, 0.1);
+}
+.neon-azul:hover {
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.7), 0 0 40px rgba(0, 123, 255, 0.35) !important;
+}
+
+/* Livro 3 - Verde */
+.neon-verde {
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.25), 0 0 20px rgba(40, 167, 69, 0.1);
+}
+.neon-verde:hover {
+    box-shadow: 0 0 20px rgba(40, 167, 69, 0.7), 0 0 40px rgba(40, 167, 69, 0.35) !important;
+}
+
+/* Livro 4 - Amarelo */
+.neon-amarelo {
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.25), 0 0 20px rgba(250, 204, 21, 0.1);
+}
+.neon-amarelo:hover {
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.7), 0 0 40px rgba(250, 204, 21, 0.35) !important;
+}
+
+/* Livro 5 - Roxo */
+.neon-roxo {
+    box-shadow: 0 0 10px rgba(111, 66, 193, 0.25), 0 0 20px rgba(111, 66, 193, 0.1);
+}
+.neon-roxo:hover {
+    box-shadow: 0 0 20px rgba(111, 66, 193, 0.7), 0 0 40px rgba(111, 66, 193, 0.35) !important;
+}
+/* Livro 6 - Ciano */
+.neon-ciano { box-shadow: 0 0 10px rgba(6, 182, 212, 0.25); }
+.neon-ciano:hover { box-shadow: 0 0 25px rgba(6, 182, 212, 0.75) !important; }
+
+/* Livro 7 - Marrom */
+.neon-marrom { box-shadow: 0 0 10px rgba(139, 69, 19, 0.25); }
+.neon-marrom:hover { box-shadow: 0 0 25px rgba(139, 69, 19, 0.75) !important; }
+
+/* Livro 8 - Verde-Limão */
+.neon-verde-limao { box-shadow: 0 0 10px rgba(163, 230, 53, 0.3); }
+.neon-verde-limao:hover { box-shadow: 0 0 25px rgba(163, 230, 53, 0.8) !important; }
+
+/* Livro 9 - Laranja */
+.neon-laranja { box-shadow: 0 0 10px rgba(249, 115, 22, 0.25); }
+.neon-laranja:hover { box-shadow: 0 0 25px rgba(249, 115, 22, 0.75) !important; }
+
+/* Livro 10 - Preto */
+.neon-preto { box-shadow: 0 0 10px rgba(71, 85, 105, 0.25); }
+.neon-preto:hover { box-shadow: 0 0 25px rgba(148, 163, 184, 0.75) !important; }
+
+/* Livro 11 - Magenta */
+.neon-magenta { box-shadow: 0 0 10px rgba(217, 70, 239, 0.25); }
+.neon-magenta:hover { box-shadow: 0 0 25px rgba(217, 70, 239, 0.75) !important; }
+
+/* Livro 12 - Turquesa */
+.neon-turquesa { box-shadow: 0 0 10px rgba(20, 184, 166, 0.25); }
+.neon-turquesa:hover { box-shadow: 0 0 25px rgba(20, 184, 166, 0.75) !important; }
+
+/* Livro 13 - Gelo */
+.neon-gelo { box-shadow: 0 0 10px rgba(186, 230, 253, 0.35); }
+.neon-gelo:hover { box-shadow: 0 0 25px rgba(125, 211, 252, 0.85) !important; }
+
+/* Livro 14 - Oliva */
+.neon-oliva { box-shadow: 0 0 10px rgba(101, 163, 13, 0.25); }
+.neon-oliva:hover { box-shadow: 0 0 25px rgba(101, 163, 13, 0.75) !important; }
+
+/* Livro 15 - Índigo */
+.neon-indigo { box-shadow: 0 0 10px rgba(79, 70, 229, 0.25); }
+.neon-indigo:hover { box-shadow: 0 0 25px rgba(79, 70, 229, 0.75) !important; }
+
+/* Livro 16 - Ciano Vivo */
+.neon-ciano-vivo { box-shadow: 0 0 10px rgba(0, 229, 255, 0.25); }
+.neon-ciano-vivo:hover { box-shadow: 0 0 25px rgba(0, 229, 255, 0.75) !important; }
+
+/* Livro 17 - Violeta */
+.neon-violeta { box-shadow: 0 0 10px rgba(139, 92, 246, 0.25); }
+.neon-violeta:hover { box-shadow: 0 0 25px rgba(139, 92, 246, 0.75) !important; }
+
+/* Livro 18 - Rosa */
+.neon-rosa { box-shadow: 0 0 10px rgba(244, 114, 182, 0.25); }
+.neon-rosa:hover { box-shadow: 0 0 25px rgba(244, 114, 182, 0.75) !important; }
+
+/* Livro 19 - Coral */
+.neon-coral { box-shadow: 0 0 10px rgba(249, 115, 22, 0.25); }
+.neon-coral:hover { box-shadow: 0 0 25px rgba(248, 113, 113, 0.75) !important; }
+
+/* Livro 20 - Lilás */
+.neon-lilas { box-shadow: 0 0 10px rgba(192, 132, 252, 0.25); }
+.neon-lilas:hover { box-shadow: 0 0 25px rgba(192, 132, 252, 0.75) !important; }
+/* ==========================================
+   CADASTRO / LOGIN - Diário de um Banana
+   ========================================== */
+
+   .auth-area {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.auth-btn {
+    background: #facc15;
+    color: #1e293b;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.auth-btn:hover {
+    background: #eab308;
+    transform: translateY(-1px);
+}
+
+.auth-btn-sair {
+    background: transparent;
+    color: #e2e8f0;
+    border: 1px solid #64748b;
+}
+
+.auth-btn-sair:hover {
+    background: #334155;
+}
+
+.auth-ola {
+    color: #e2e8f0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.auth-ola strong {
+    color: #facc15;
+}
+
+/* OVERLAY */
+.auth-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 2000;
+}
+
+.auth-overlay.ativo {
+    display: flex;
+}
+
+.auth-modal {
+    background: #fff;
+    width: 100%;
+    max-width: 420px;
+    max-height: 92vh;
+    overflow-y: auto;
+    border-radius: 12px;
+    padding: 28px;
+    position: relative;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
+    animation: authEntrada 0.2s ease;
+}
+
+@keyframes authEntrada {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.auth-fechar {
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    background: #f1f5f9;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    color: #334155;
+}
+
+.auth-logo {
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 4px;
+}
+
+.auth-titulo {
+    text-align: center;
+    font-size: 22px;
+    color: #1e293b;
+    margin-bottom: 18px;
+}
+
+/* ABAS */
+.auth-abas {
+    display: flex;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 20px;
+}
+
+.auth-aba {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 9px;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.auth-aba.ativo {
+    background: #2563eb;
+    color: #fff;
+}
+
+/* FORMULÁRIOS */
+.auth-form {
+    display: none;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.auth-form.ativo {
+    display: flex;
+}
+
+.auth-campo label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 5px;
+}
+
+.auth-input-wrap {
+    position: relative;
+}
+
+.auth-campo input {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    background: #f8fafc;
+    color: #1e293b;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.auth-campo input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.auth-campo.invalido input {
+    border-color: #dc2626;
+}
+
+.auth-campo.tem-olho input {
+    padding-right: 42px;
+}
+
+.auth-olho {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 6px;
+}
+
+.auth-erro {
+    display: block;
+    min-height: 0;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #dc2626;
+}
+
+/* FORÇA DA SENHA */
+.auth-forca {
+    height: 5px;
+    background: #e2e8f0;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.auth-forca-barra {
+    height: 100%;
+    width: 0;
+    transition: width 0.25s, background 0.25s;
+}
+
+.auth-forca-texto {
+    font-size: 12px;
+    margin-top: 4px;
+    color: #64748b;
+}
+
+/* MENSAGEM GERAL */
+.auth-msg {
+    display: none;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.auth-msg.ativo {
+    display: block;
+}
+
+.auth-enviar {
+    width: 100%;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.auth-enviar:hover {
+    background: #1d4ed8;
+}
+
+.auth-enviar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.auth-troca {
+    text-align: center;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.auth-troca button {
+    background: none;
+    border: none;
+    color: #2563eb;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* AVISO (TOAST) */
+.auth-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #16a34a;
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    z-index: 3000;
+}
+
+.auth-toast.ativo {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* MODO ESCURO */
+body.dark-mode .auth-modal {
+    background-color: #1e1e1e !important;
+    border: 1px solid #334155;
+}
+
+body.dark-mode .auth-titulo,
+body.dark-mode .auth-campo label {
+    color: #f8fafc !important;
+}
+
+body.dark-mode .auth-campo input {
+    background: #0f172a;
+    border-color: #475569;
+    color: #f8fafc;
+}
+
+body.dark-mode .auth-abas,
+body.dark-mode .auth-fechar {
+    background: #0f172a;
+}
+
+body.dark-mode .auth-fechar {
+    color: #f8fafc;
+}
+
+body.dark-mode .auth-aba {
+    color: #94a3b8;
+}
+
+body.dark-mode .auth-aba.ativo {
+    background: #2563eb;
+    color: #fff;
+}
+
+body.dark-mode .auth-forca {
+    background: #334155;
+}
+
+body.dark-mode .auth-erro {
+    color: #f87171 !important;
+}
+
+body.dark-mode .auth-msg {
+    background: #450a0a;
+    color: #fecaca !important;
+    border-color: #7f1d1d;
+}
+
+body.dark-mode .auth-troca,
+body.dark-mode .auth-forca-texto {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .auth-troca button {
+    color: #60a5fa !important;
+}
+
+body.dark-mode .auth-toast {
+    color: #fff !important;
+}
+
+/* CELULAR */
+@media screen and (max-width: 768px) {
+    .auth-area {
+        gap: 6px;
+    }
+
+    .auth-modal {
+        padding: 22px 18px;
+    }
 }
